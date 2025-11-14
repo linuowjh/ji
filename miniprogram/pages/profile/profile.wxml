@@ -1,0 +1,94 @@
+<!--pages/profile/profile.wxml-->
+<view class="container">
+  <!-- 用户信息卡片 -->
+  <view class="user-card solemn-bg">
+    <image class="user-avatar" src="{{userInfo.avatar || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+    <text class="user-name solemn-text">{{userInfo.nickname || '未登录'}}</text>
+    <text class="user-phone" wx:if="{{userInfo.phone}}">{{userInfo.phone}}</text>
+  </view>
+
+  <!-- 统计数据 -->
+  <view class="stats-card card">
+    <view class="stat-item" bindtap="goToMyMemorials">
+      <text class="stat-value">{{stats.memorialCount}}</text>
+      <text class="stat-label">纪念馆</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item" bindtap="goToWorshipHistory">
+      <text class="stat-value">{{stats.worshipCount}}</text>
+      <text class="stat-label">祭扫次数</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item" bindtap="goToFamilies">
+      <text class="stat-value">{{stats.familyCount}}</text>
+      <text class="stat-label">家族圈</text>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-section">
+    <view class="menu-item card" bindtap="goToMyMemorials">
+      <view class="menu-left">
+        <text class="menu-icon">🏛️</text>
+        <text class="menu-text">我的纪念馆</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <view class="menu-item card" bindtap="goToWorshipHistory">
+      <view class="menu-left">
+        <text class="menu-icon">🕯️</text>
+        <text class="menu-text">祭扫记录</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <view class="menu-item card" bindtap="goToFamilies">
+      <view class="menu-left">
+        <text class="menu-icon">👨‍👩‍👧‍👦</text>
+        <text class="menu-text">家族圈</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <view class="menu-item card" bindtap="goToPrivacySettings">
+      <view class="menu-left">
+        <text class="menu-icon">🔒</text>
+        <text class="menu-text">隐私设置</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 其他功能 -->
+  <view class="menu-section">
+    <view class="menu-item card" bindtap="goToHelp">
+      <view class="menu-left">
+        <text class="menu-icon">❓</text>
+        <text class="menu-text">帮助中心</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <view class="menu-item card" bindtap="contactService">
+      <view class="menu-left">
+        <text class="menu-icon">📞</text>
+        <text class="menu-text">联系客服</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <view class="menu-item card" bindtap="goToAbout">
+      <view class="menu-left">
+        <text class="menu-icon">ℹ️</text>
+        <text class="menu-text">关于我们</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-section">
+    <button class="btn-logout" bindtap="logout">退出登录</button>
+  </view>
+</view>

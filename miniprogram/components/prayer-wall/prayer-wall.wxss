@@ -1,0 +1,123 @@
+/* components/prayer-wall/prayer-wall.wxss */
+.prayer-wall {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.prayer-item {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.prayer-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8rpx;
+  height: 100%;
+  background: linear-gradient(180deg, #f39c12 0%, #e67e22 100%);
+}
+
+.prayer-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.prayer-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+}
+
+.prayer-user-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.prayer-username {
+  font-size: 30rpx;
+  color: #2c3e50;
+  margin-bottom: 8rpx;
+}
+
+.prayer-time {
+  font-size: 24rpx;
+  color: #95a5a6;
+}
+
+.prayer-content {
+  font-size: 30rpx;
+  line-height: 48rpx;
+  color: #34495e;
+  margin-bottom: 20rpx;
+  text-align: justify;
+}
+
+.prayer-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.like-btn {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx 24rpx;
+  background-color: #f8f9fa;
+  border-radius: 50rpx;
+  border: none;
+}
+
+.like-btn.liked {
+  background-color: #fef5e7;
+}
+
+.like-icon {
+  font-size: 32rpx;
+}
+
+.like-count {
+  font-size: 24rpx;
+  color: #7f8c8d;
+}
+
+.like-btn.liked .like-count {
+  color: #f39c12;
+}
+
+.empty {
+  text-align: center;
+  padding: 80rpx 40rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #95a5a6;
+}
+
+.loading {
+  text-align: center;
+  padding: 40rpx;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #95a5a6;
+}
+
+.load-more {
+  text-align: center;
+  padding: 40rpx;
+  font-size: 28rpx;
+  color: #3498db;
+}

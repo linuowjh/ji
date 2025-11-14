@@ -1,0 +1,79 @@
+<!--pages/memorial/detail/detail.wxml-->
+<view class="container" wx:if="{{!loading && memorial}}">
+  <!-- 纪念馆头部 -->
+  <view class="memorial-header solemn-bg">
+    <image class="memorial-avatar" src="{{memorial.avatarUrl}}" mode="aspectFill" bindtap="previewImage" data-url="{{memorial.avatarUrl}}"></image>
+    <text class="memorial-name solemn-text">{{memorial.deceasedName}}</text>
+    <text class="memorial-dates">{{memorial.birthDate}} - {{memorial.deathDate}}</text>
+    <text class="memorial-epitaph" wx:if="{{memorial.epitaph}}">{{memorial.epitaph}}</text>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button class="btn-worship" bindtap="goToWorship">
+      <text class="btn-icon">🕯️</text>
+      <text class="btn-text">祭扫</text>
+    </button>
+    <button class="btn-edit" bindtap="editMemorial">
+      <text class="btn-icon">✏️</text>
+      <text class="btn-text">编辑</text>
+    </button>
+    <button class="btn-share" open-type="share">
+      <text class="btn-icon">📤</text>
+      <text class="btn-text">分享</text>
+    </button>
+  </view>
+
+  <!-- 生平简介 -->
+  <view class="section card" wx:if="{{memorial.biography}}">
+    <view class="section-title">生平简介</view>
+    <text class="biography-text">{{memorial.biography}}</text>
+  </view>
+
+  <!-- 虚拟墓碑 -->
+  <view class="section card" wx:if="{{memorial.tombstoneStyle}}">
+    <view class="section-title">虚拟墓碑</view>
+    <view class="tombstone {{memorial.tombstoneStyle}}">
+      <text class="tombstone-text">{{memorial.epitaph || memorial.deceasedName}}</text>
+    </view>
+  </view>
+
+  <!-- 最近祭扫 -->
+  <view class="section card" wx:if="{{recentWorship.length > 0}}">
+    <view class="section-title">最近祭扫</view>
+    <view class="worship-list">
+      <view class="worship-item" wx:for="{{recentWorship}}" wx:key="id">
+        <image class="worship-avatar" src="{{item.userAvatar}}" mode="aspectFill"></image>
+        <view class="worship-content">
+          <text class="worship-user">{{item.userName}}</text>
+          <text class="worship-action">{{item.worshipTypeText}}</text>
+          <text class="worship-time">{{item.createdAt}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 统计信息 -->
+  <view class="section card">
+    <view class="section-title">统计信息</view>
+    <view class="stats-grid">
+      <view class="stat-box">
+        <text class="stat-value">{{memorial.worshipCount || 0}}</text>
+        <text class="stat-label">祭扫次数</text>
+      </view>
+      <view class="stat-box">
+        <text class="stat-value">{{memorial.visitorCount || 0}}</text>
+        <text class="stat-label">访客人数</text>
+      </view>
+      <view class="stat-box">
+        <text class="stat-value">{{memorial.prayerCount || 0}}</text>
+        <text class="stat-label">祈福留言</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 加载状态 -->
+<view class="loading-container" wx:if="{{loading}}">
+  <text class="loading-text">加载中...</text>
+</view>

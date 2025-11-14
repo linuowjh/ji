@@ -1,0 +1,103 @@
+<!--pages/memorial/create/create.wxml-->
+<view class="container">
+  <form bindsubmit="submitForm">
+    <!-- 基础信息 -->
+    <view class="section card">
+      <view class="section-title">基础信息</view>
+      
+      <!-- 照片上传 -->
+      <view class="form-item">
+        <text class="form-label">逝者照片</text>
+        <view class="avatar-upload" bindtap="uploadAvatar">
+          <image wx:if="{{formData.avatarUrl}}" class="avatar-preview" src="{{formData.avatarUrl}}" mode="aspectFill"></image>
+          <view wx:else class="avatar-placeholder">
+            <text class="placeholder-icon">📷</text>
+            <text class="placeholder-text">点击上传照片</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 姓名 -->
+      <view class="form-item">
+        <text class="form-label">逝者姓名 *</text>
+        <input class="form-input" placeholder="请输入逝者姓名" value="{{formData.deceasedName}}" bindinput="inputName" />
+      </view>
+
+      <!-- 出生日期 -->
+      <view class="form-item">
+        <text class="form-label">出生日期 *</text>
+        <picker mode="date" value="{{formData.birthDate}}" bindchange="selectBirthDate">
+          <view class="form-picker">
+            <text wx:if="{{formData.birthDate}}">{{formData.birthDate}}</text>
+            <text wx:else class="picker-placeholder">请选择出生日期</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 逝世日期 -->
+      <view class="form-item">
+        <text class="form-label">逝世日期 *</text>
+        <picker mode="date" value="{{formData.deathDate}}" bindchange="selectDeathDate">
+          <view class="form-picker">
+            <text wx:if="{{formData.deathDate}}">{{formData.deathDate}}</text>
+            <text wx:else class="picker-placeholder">请选择逝世日期</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 生平简介 -->
+      <view class="form-item">
+        <text class="form-label">生平简介</text>
+        <textarea class="form-textarea" placeholder="请输入生平简介..." value="{{formData.biography}}" bindinput="inputBiography" maxlength="500"></textarea>
+      </view>
+    </view>
+
+    <!-- 纪念馆风格 -->
+    <view class="section card">
+      <view class="section-title">纪念馆风格</view>
+      
+      <!-- 主题风格 -->
+      <view class="form-item">
+        <text class="form-label">主题风格</text>
+        <picker mode="selector" range="{{themeOptions}}" range-key="label" value="{{formData.themeStyle}}" bindchange="selectTheme">
+          <view class="form-picker">
+            <text>{{themeOptions[formData.themeStyle] ? themeOptions[formData.themeStyle].label : '请选择主题风格'}}</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 墓碑样式 -->
+      <view class="form-item">
+        <text class="form-label">墓碑样式</text>
+        <picker mode="selector" range="{{tombstoneOptions}}" range-key="label" value="{{formData.tombstoneStyle}}" bindchange="selectTombstone">
+          <view class="form-picker">
+            <text>{{tombstoneOptions[formData.tombstoneStyle] ? tombstoneOptions[formData.tombstoneStyle].label : '请选择墓碑样式'}}</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 墓志铭 -->
+      <view class="form-item">
+        <text class="form-label">墓志铭</text>
+        <textarea class="form-textarea" placeholder="请输入墓志铭..." value="{{formData.epitaph}}" bindinput="inputEpitaph" maxlength="100"></textarea>
+      </view>
+    </view>
+
+    <!-- 隐私设置 -->
+    <view class="section card">
+      <view class="section-title">隐私设置</view>
+      
+      <view class="form-item">
+        <text class="form-label">访问权限</text>
+        <picker mode="selector" range="{{privacyOptions}}" range-key="label" value="{{formData.privacyLevel}}" bindchange="selectPrivacy">
+          <view class="form-picker">
+            <text>{{privacyOptions[formData.privacyLevel - 1].label}}</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 提交按钮 -->
+    <button class="btn-primary submit-btn" formType="submit">{{mode === 'create' ? '创建纪念馆' : '保存修改'}}</button>
+  </form>
+</view>

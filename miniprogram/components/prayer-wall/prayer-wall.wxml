@@ -1,0 +1,40 @@
+<!--components/prayer-wall/prayer-wall.wxml-->
+<view class="prayer-wall">
+  <!-- 祈福列表 -->
+  <view class="prayer-item" wx:for="{{prayers}}" wx:key="id">
+    <view class="prayer-header">
+      <image class="prayer-avatar" src="{{item.userAvatar}}" mode="aspectFill"></image>
+      <view class="prayer-user-info">
+        <text class="prayer-username">{{item.userName}}</text>
+        <text class="prayer-time">{{item.createdAt}}</text>
+      </view>
+    </view>
+    
+    <text class="prayer-content">{{item.content}}</text>
+    
+    <view class="prayer-footer">
+      <button 
+        class="like-btn {{item.liked ? 'liked' : ''}}" 
+        bindtap="likePrayer" 
+        data-id="{{item.id}}">
+        <text class="like-icon">{{item.liked ? '❤️' : '🤍'}}</text>
+        <text class="like-count">{{item.likeCount || 0}}</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty" wx:if="{{prayers.length === 0 && !loading}}">
+    <text class="empty-text">暂无祈福留言</text>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="load-more" wx:if="{{hasMore && !loading && prayers.length > 0}}" bindtap="loadMore">
+    <text>加载更多</text>
+  </view>
+</view>

@@ -1,0 +1,55 @@
+<!--components/media-uploader/media-uploader.wxml-->
+<view class="media-uploader">
+  <!-- 已上传文件列表 -->
+  <view class="file-item" wx:for="{{fileList}}" wx:key="index">
+    <!-- 图片预览 -->
+    <image 
+      wx:if="{{item.type === 'image'}}"
+      class="file-preview" 
+      src="{{item.url}}" 
+      mode="aspectFill"
+      bindtap="previewFile"
+      data-index="{{index}}">
+    </image>
+
+    <!-- 视频预览 -->
+    <video 
+      wx:elif="{{item.type === 'video'}}"
+      class="file-preview" 
+      src="{{item.url}}"
+      bindtap="previewFile"
+      data-index="{{index}}">
+    </video>
+
+    <!-- 语音图标 -->
+    <view 
+      wx:elif="{{item.type === 'voice'}}"
+      class="file-icon"
+      bindtap="previewFile"
+      data-index="{{index}}">
+      <text class="icon-text">🎤</text>
+      <text class="icon-label">语音</text>
+    </view>
+
+    <!-- 删除按钮 -->
+    <view class="delete-btn" catchtap="deleteFile" data-index="{{index}}">
+      <text class="delete-icon">×</text>
+    </view>
+  </view>
+
+  <!-- 上传按钮 -->
+  <view class="upload-btn" bindtap="chooseFile" wx:if="{{fileList.length < maxCount}}">
+    <text class="upload-icon">+</text>
+    <text class="upload-text">
+      <text wx:if="{{type === 'image'}}">上传图片</text>
+      <text wx:elif="{{type === 'video'}}">上传视频</text>
+      <text wx:elif="{{type === 'voice'}}">录制语音</text>
+    </text>
+
+    <!-- 上传进度 -->
+    <view class="uploading-mask" wx:if="{{uploading}}">
+      <text class="upload-icon">⏳</text>
+      <text class="progress-text">{{uploadProgress}}%</text>
+    </view>
+  </view>
+</view>

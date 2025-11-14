@@ -1,0 +1,128 @@
+/* components/worship-panel/worship-panel.wxss */
+.worship-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 30rpx;
+}
+
+.options-panel {
+  margin-bottom: 40rpx;
+}
+
+.option-list {
+  display: flex;
+  justify-content: space-around;
+  gap: 20rpx;
+}
+
+.option-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30rpx;
+  border: 2rpx solid #ecf0f1;
+  border-radius: 12rpx;
+  flex: 1;
+  transition: all 0.3s;
+}
+
+.option-item.selected {
+  border-color: #f39c12;
+  background-color: #fef5e7;
+}
+
+.option-icon {
+  font-size: 64rpx;
+  margin-bottom: 16rpx;
+}
+
+.option-label {
+  font-size: 28rpx;
+  color: #2c3e50;
+}
+
+.candle-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 0;
+  margin-bottom: 40rpx;
+}
+
+.candle-display {
+  margin-bottom: 30rpx;
+}
+
+.candle-icon {
+  font-size: 120rpx;
+  animation: flicker 2s infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.candle-text {
+  font-size: 28rpx;
+  color: #7f8c8d;
+}
+
+.prayer-panel {
+  margin-bottom: 40rpx;
+}
+
+.prayer-input {
+  width: 100%;
+  min-height: 200rpx;
+  padding: 20rpx;
+  border: 2rpx solid #ecf0f1;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  box-sizing: border-box;
+  margin-bottom: 10rpx;
+}
+
+.char-count {
+  text-align: right;
+  font-size: 24rpx;
+  color: #95a5a6;
+  margin-bottom: 20rpx;
+}
+
+.message-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.btn-action {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30rpx 20rpx;
+  background-color: #ecf0f1;
+  border-radius: 12rpx;
+  border: none;
+}
+
+.action-icon {
+  font-size: 48rpx;
+  margin-bottom: 10rpx;
+}
+
+.action-text {
+  font-size: 24rpx;
+  color: #2c3e50;
+}
+
+.btn-submit {
+  width: 100%;
+  background-color: #f39c12;
+  color: #fff;
+  border-radius: 8rpx;
+  padding: 28rpx;
+  font-size: 32rpx;
+  border: none;
+}

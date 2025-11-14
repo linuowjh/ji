@@ -1,0 +1,69 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 顶部横幅 -->
+  <view class="banner solemn-bg">
+    <view class="banner-content">
+      <text class="banner-title solemn-text">云念</text>
+      <text class="banner-subtitle">寄托思念 · 永恒纪念</text>
+    </view>
+  </view>
+
+  <!-- 快速入口 -->
+  <view class="quick-actions">
+    <view class="action-item" bindtap="createMemorial">
+      <image class="action-icon" src="/images/create.png" mode="aspectFit"></image>
+      <text class="action-text">创建纪念馆</text>
+    </view>
+    <view class="action-item" bindtap="goToMemorialList">
+      <image class="action-icon" src="/images/list.png" mode="aspectFit"></image>
+      <text class="action-text">我的纪念馆</text>
+    </view>
+    <view class="action-item" bindtap="goToFamily">
+      <image class="action-icon" src="/images/family-icon.png" mode="aspectFit"></image>
+      <text class="action-text">家族圈</text>
+    </view>
+  </view>
+
+  <!-- 最近访问 -->
+  <view class="section" wx:if="{{recentMemorials.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">最近访问</text>
+      <text class="section-more" bindtap="goToMemorialList">查看全部</text>
+    </view>
+    <view class="memorial-list">
+      <view class="memorial-card" wx:for="{{recentMemorials}}" wx:key="id" bindtap="goToMemorialDetail" data-id="{{item.id}}">
+        <image class="memorial-avatar" src="{{item.avatarUrl}}" mode="aspectFill"></image>
+        <view class="memorial-info">
+          <text class="memorial-name">{{item.deceasedName}}</text>
+          <text class="memorial-dates">{{item.birthDate}} - {{item.deathDate}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 纪念日提醒 -->
+  <view class="section" wx:if="{{upcomingReminders.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">纪念日提醒</text>
+    </view>
+    <view class="reminder-list">
+      <view class="reminder-item" wx:for="{{upcomingReminders}}" wx:key="id">
+        <view class="reminder-date">
+          <text class="reminder-day">{{item.day}}</text>
+          <text class="reminder-month">{{item.month}}</text>
+        </view>
+        <view class="reminder-content">
+          <text class="reminder-title">{{item.title}}</text>
+          <text class="reminder-desc">{{item.description}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 引导文案 -->
+  <view class="guide" wx:if="{{!hasMemorial}}">
+    <image class="guide-image" src="/images/guide.png" mode="aspectFit"></image>
+    <text class="guide-text">为逝去的亲人创建一个永恒的纪念空间</text>
+    <button class="btn-primary guide-btn" bindtap="createMemorial">立即创建</button>
+  </view>
+</view>

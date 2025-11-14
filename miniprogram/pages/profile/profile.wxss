@@ -1,0 +1,107 @@
+/* pages/profile/profile.wxss */
+.user-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 40rpx;
+  border-radius: 16rpx;
+  margin-bottom: 30rpx;
+}
+
+.user-avatar {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  border: 6rpx solid #d4af37;
+  margin-bottom: 30rpx;
+}
+
+.user-name {
+  font-size: 40rpx;
+  font-weight: bold;
+  margin-bottom: 16rpx;
+}
+
+.user-phone {
+  font-size: 28rpx;
+  color: #ecf0f1;
+}
+
+.stats-card {
+  display: flex;
+  justify-content: space-around;
+  padding: 40rpx;
+  margin-bottom: 30rpx;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 10rpx;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #7f8c8d;
+}
+
+.stat-divider {
+  width: 2rpx;
+  height: 80rpx;
+  background-color: #ecf0f1;
+}
+
+.menu-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  margin-bottom: 30rpx;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+}
+
+.menu-left {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.menu-icon {
+  font-size: 40rpx;
+}
+
+.menu-text {
+  font-size: 32rpx;
+  color: #2c3e50;
+}
+
+.menu-arrow {
+  font-size: 48rpx;
+  color: #bdc3c7;
+}
+
+.logout-section {
+  margin-top: 40rpx;
+}
+
+.btn-logout {
+  width: 100%;
+  background-color: #fff;
+  color: #e74c3c;
+  border: 2rpx solid #e74c3c;
+  border-radius: 8rpx;
+  padding: 24rpx;
+  font-size: 32rpx;
+}

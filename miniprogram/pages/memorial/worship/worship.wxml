@@ -1,0 +1,109 @@
+<!--pages/memorial/worship/worship.wxml-->
+<view class="container">
+  <!-- 纪念馆信息 -->
+  <view class="memorial-info card" wx:if="{{memorial}}">
+    <image class="memorial-avatar" src="{{memorial.avatarUrl}}" mode="aspectFill"></image>
+    <view class="memorial-text">
+      <text class="memorial-name">{{memorial.deceasedName}}</text>
+      <text class="memorial-dates">{{memorial.birthDate}} - {{memorial.deathDate}}</text>
+    </view>
+  </view>
+
+  <!-- 祭扫标签 -->
+  <view class="tabs">
+    <view class="tab-item {{activeTab === 'flower' ? 'active' : ''}}" bindtap="switchTab" data-tab="flower">
+      <text class="tab-icon">🌸</text>
+      <text class="tab-text">献花</text>
+    </view>
+    <view class="tab-item {{activeTab === 'candle' ? 'active' : ''}}" bindtap="switchTab" data-tab="candle">
+      <text class="tab-icon">🕯️</text>
+      <text class="tab-text">点烛</text>
+    </view>
+    <view class="tab-item {{activeTab === 'incense' ? 'active' : ''}}" bindtap="switchTab" data-tab="incense">
+      <text class="tab-icon">🪔</text>
+      <text class="tab-text">上香</text>
+    </view>
+    <view class="tab-item {{activeTab === 'tribute' ? 'active' : ''}}" bindtap="switchTab" data-tab="tribute">
+      <text class="tab-icon">🍎</text>
+      <text class="tab-text">供品</text>
+    </view>
+    <view class="tab-item {{activeTab === 'prayer' ? 'active' : ''}}" bindtap="switchTab" data-tab="prayer">
+      <text class="tab-icon">🙏</text>
+      <text class="tab-text">祈福</text>
+    </view>
+  </view>
+
+  <!-- 献花面板 -->
+  <view class="worship-panel card" wx:if="{{activeTab === 'flower'}}">
+    <text class="panel-title">选择花卉</text>
+    <view class="flower-options">
+      <view class="option-item {{flowerType === 'chrysanthemum' ? 'selected' : ''}}" bindtap="selectFlower" data-type="chrysanthemum">
+        <text class="option-icon">🌼</text>
+        <text class="option-text">菊花</text>
+      </view>
+      <view class="option-item {{flowerType === 'carnation' ? 'selected' : ''}}" bindtap="selectFlower" data-type="carnation">
+        <text class="option-icon">🌹</text>
+        <text class="option-text">康乃馨</text>
+      </view>
+      <view class="option-item {{flowerType === 'lily' ? 'selected' : ''}}" bindtap="selectFlower" data-type="lily">
+        <text class="option-icon">🌷</text>
+        <text class="option-text">百合</text>
+      </view>
+    </view>
+    <button class="btn-primary" bindtap="offerFlower">献花</button>
+  </view>
+
+  <!-- 点烛面板 -->
+  <view class="worship-panel card" wx:if="{{activeTab === 'candle'}}">
+    <text class="panel-title">点燃蜡烛</text>
+    <view class="candle-display">
+      <text class="candle-icon">🕯️</text>
+    </view>
+    <button class="btn-primary" bindtap="lightCandle">点烛</button>
+  </view>
+
+  <!-- 上香面板 -->
+  <view class="worship-panel card" wx:if="{{activeTab === 'incense'}}">
+    <text class="panel-title">选择香柱数量</text>
+    <view class="incense-options">
+      <view class="option-item {{incenseCount === 3 ? 'selected' : ''}}" bindtap="selectIncense" data-count="{{3}}">
+        <text class="option-text">三柱香</text>
+      </view>
+      <view class="option-item {{incenseCount === 9 ? 'selected' : ''}}" bindtap="selectIncense" data-count="{{9}}">
+        <text class="option-text">九柱香</text>
+      </view>
+    </view>
+    <button class="btn-primary" bindtap="offerIncense">上香</button>
+  </view>
+
+  <!-- 供品面板 -->
+  <view class="worship-panel card" wx:if="{{activeTab === 'tribute'}}">
+    <text class="panel-title">选择供品</text>
+    <view class="tribute-options">
+      <view class="option-item {{tributeType === 'fruit' ? 'selected' : ''}}" bindtap="selectTribute" data-type="fruit">
+        <text class="option-icon">🍎</text>
+        <text class="option-text">水果</text>
+      </view>
+      <view class="option-item {{tributeType === 'cake' ? 'selected' : ''}}" bindtap="selectTribute" data-type="cake">
+        <text class="option-icon">🍰</text>
+        <text class="option-text">糕点</text>
+      </view>
+      <view class="option-item {{tributeType === 'tea' ? 'selected' : ''}}" bindtap="selectTribute" data-type="tea">
+        <text class="option-icon">🍵</text>
+        <text class="option-text">茶水</text>
+      </view>
+    </view>
+    <button class="btn-primary" bindtap="offerTribute">供奉</button>
+  </view>
+
+  <!-- 祈福面板 -->
+  <view class="worship-panel card" wx:if="{{activeTab === 'prayer'}}">
+    <text class="panel-title">写下祈福语</text>
+    <textarea class="prayer-input" placeholder="请输入祈福语..." value="{{prayerText}}" bindinput="inputPrayer" maxlength="200"></textarea>
+    <view class="message-actions">
+      <button class="btn-secondary" bindtap="recordVoice">语音留言</button>
+      <button class="btn-secondary" bindtap="recordVideo">视频留言</button>
+    </view>
+    <button class="btn-primary" bindtap="sendPrayer">发送祈福</button>
+  </view>
+</view>

@@ -1,0 +1,91 @@
+/* pages/memorial/create/create.wxss */
+.section {
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 30rpx;
+}
+
+.form-item {
+  margin-bottom: 30rpx;
+}
+
+.form-label {
+  display: block;
+  font-size: 30rpx;
+  color: #2c3e50;
+  margin-bottom: 16rpx;
+}
+
+.form-input {
+  width: 100%;
+  padding: 24rpx;
+  border: 2rpx solid #ecf0f1;
+  border-radius: 8rpx;
+  font-size: 30rpx;
+  box-sizing: border-box;
+}
+
+.form-textarea {
+  width: 100%;
+  min-height: 200rpx;
+  padding: 24rpx;
+  border: 2rpx solid #ecf0f1;
+  border-radius: 8rpx;
+  font-size: 30rpx;
+  box-sizing: border-box;
+}
+
+.form-picker {
+  padding: 24rpx;
+  border: 2rpx solid #ecf0f1;
+  border-radius: 8rpx;
+  font-size: 30rpx;
+}
+
+.picker-placeholder {
+  color: #95a5a6;
+}
+
+.avatar-upload {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200rpx;
+  height: 200rpx;
+  margin: 0 auto;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2rpx dashed #ecf0f1;
+}
+
+.avatar-preview {
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-icon {
+  font-size: 64rpx;
+  margin-bottom: 16rpx;
+}
+
+.placeholder-text {
+  font-size: 24rpx;
+  color: #95a5a6;
+}
+
+.submit-btn {
+  margin-top: 60rpx;
+  width: 100%;
+}

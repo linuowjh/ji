@@ -1,0 +1,58 @@
+<!--components/worship-panel/worship-panel.wxml-->
+<view class="worship-panel">
+  <!-- 选项面板 (献花、上香、供品) -->
+  <view class="options-panel" wx:if="{{type !== 'candle' && type !== 'prayer'}}">
+    <view class="option-list">
+      <view 
+        class="option-item {{selectedOption === item.value ? 'selected' : ''}}" 
+        wx:for="{{options[type]}}" 
+        wx:key="value"
+        bindtap="selectOption"
+        data-value="{{item.value}}">
+        <text class="option-icon">{{item.icon}}</text>
+        <text class="option-label">{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 点烛面板 -->
+  <view class="candle-panel" wx:if="{{type === 'candle'}}">
+    <view class="candle-display">
+      <text class="candle-icon">🕯️</text>
+    </view>
+    <text class="candle-text">点燃蜡烛，照亮前路</text>
+  </view>
+
+  <!-- 祈福面板 -->
+  <view class="prayer-panel" wx:if="{{type === 'prayer'}}">
+    <textarea 
+      class="prayer-input" 
+      placeholder="请输入祈福语..." 
+      value="{{inputValue}}"
+      bindinput="onInput"
+      maxlength="200"
+      auto-height>
+    </textarea>
+    <view class="char-count">{{inputValue.length}}/200</view>
+    
+    <view class="message-actions">
+      <button class="btn-action" bindtap="recordVoice">
+        <text class="action-icon">🎤</text>
+        <text class="action-text">语音留言</text>
+      </button>
+      <button class="btn-action" bindtap="recordVideo">
+        <text class="action-icon">📹</text>
+        <text class="action-text">视频留言</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <button class="btn-submit" bindtap="submit">
+    <text wx:if="{{type === 'flower'}}">献花</text>
+    <text wx:elif="{{type === 'candle'}}">点烛</text>
+    <text wx:elif="{{type === 'incense'}}">上香</text>
+    <text wx:elif="{{type === 'tribute'}}">供奉</text>
+    <text wx:elif="{{type === 'prayer'}}">发送祈福</text>
+  </button>
+</view>

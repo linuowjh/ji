@@ -1,0 +1,154 @@
+/* pages/memorial/worship/worship.wxss */
+.memorial-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.memorial-avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+}
+
+.memorial-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.memorial-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 8rpx;
+}
+
+.memorial-dates {
+  font-size: 28rpx;
+  color: #7f8c8d;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  transition: all 0.3s;
+}
+
+.tab-item.active {
+  background-color: #f39c12;
+}
+
+.tab-icon {
+  font-size: 48rpx;
+  margin-bottom: 8rpx;
+}
+
+.tab-text {
+  font-size: 24rpx;
+  color: #2c3e50;
+}
+
+.tab-item.active .tab-text {
+  color: #fff;
+}
+
+.worship-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.flower-options,
+.incense-options,
+.tribute-options {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 40rpx;
+}
+
+.option-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30rpx;
+  border: 2rpx solid #ecf0f1;
+  border-radius: 12rpx;
+  min-width: 150rpx;
+  transition: all 0.3s;
+}
+
+.option-item.selected {
+  border-color: #f39c12;
+  background-color: #fef5e7;
+}
+
+.option-icon {
+  font-size: 64rpx;
+  margin-bottom: 16rpx;
+}
+
+.option-text {
+  font-size: 28rpx;
+  color: #2c3e50;
+}
+
+.candle-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300rpx;
+  margin-bottom: 40rpx;
+}
+
+.candle-icon {
+  font-size: 120rpx;
+  animation: flicker 2s infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.prayer-input {
+  width: 100%;
+  min-height: 200rpx;
+  padding: 20rpx;
+  border: 2rpx solid #ecf0f1;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  margin-bottom: 20rpx;
+  box-sizing: border-box;
+}
+
+.message-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.message-actions .btn-secondary {
+  flex: 1;
+}

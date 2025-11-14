@@ -1,0 +1,139 @@
+/* pages/family/list/list.wxss */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+  padding: 20rpx 0;
+}
+
+.header-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.header-actions {
+  display: flex;
+  gap: 20rpx;
+}
+
+.btn-join,
+.btn-create {
+  background-color: #2c3e50;
+  color: #fff;
+  border-radius: 50rpx;
+  padding: 16rpx 40rpx;
+  font-size: 28rpx;
+  border: none;
+}
+
+.btn-join {
+  background-color: #3498db;
+}
+
+.family-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30rpx;
+}
+
+.family-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.family-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.family-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.family-badge {
+  background-color: #e74c3c;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.badge-text {
+  font-size: 24rpx;
+  color: #fff;
+}
+
+.family-desc {
+  font-size: 28rpx;
+  color: #7f8c8d;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.family-stats {
+  display: flex;
+  gap: 30rpx;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.stat-icon {
+  font-size: 28rpx;
+}
+
+.stat-text {
+  font-size: 24rpx;
+  color: #95a5a6;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 40rpx;
+  text-align: center;
+}
+
+.empty-image {
+  width: 300rpx;
+  height: 300rpx;
+  margin-bottom: 40rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #7f8c8d;
+  margin-bottom: 40rpx;
+}
+
+.empty-actions {
+  display: flex;
+  gap: 20rpx;
+}
+
+.empty-actions .btn-secondary,
+.empty-actions .btn-primary {
+  padding: 24rpx 40rpx;
+}
+
+.loading {
+  text-align: center;
+  padding: 40rpx;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #95a5a6;
+}

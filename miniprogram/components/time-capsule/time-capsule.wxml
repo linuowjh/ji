@@ -1,0 +1,51 @@
+<!--components/time-capsule/time-capsule.wxml-->
+<view class="time-capsule">
+  <!-- 消息列表 -->
+  <view class="message-item" wx:for="{{messages}}" wx:key="id">
+    <view class="message-header">
+      <image class="message-avatar" src="{{item.userAvatar}}" mode="aspectFill"></image>
+      <view class="message-user-info">
+        <text class="message-username">{{item.userName}}</text>
+        <text class="message-time">{{item.createdAt}}</text>
+      </view>
+      <view class="message-type-badge {{item.type}}">
+        <text wx:if="{{item.type === 'voice'}}">语音</text>
+        <text wx:elif="{{item.type === 'video'}}">视频</text>
+      </view>
+    </view>
+
+    <view class="message-content">
+      <!-- 语音消息 -->
+      <view class="voice-player" wx:if="{{item.type === 'voice'}}">
+        <button class="play-btn" bindtap="playVoice" data-url="{{item.mediaUrl}}">
+          <text class="play-icon">▶️</text>
+        </button>
+        <view class="voice-info">
+          <text class="voice-duration">{{item.duration}}秒</text>
+        </view>
+      </view>
+
+      <!-- 视频消息 -->
+      <view class="video-cover" wx:if="{{item.type === 'video'}}" bindtap="playVideo" data-url="{{item.mediaUrl}}">
+        <image class="video-thumbnail" src="{{item.thumbnailUrl}}" mode="aspectFill"></image>
+        <view class="video-play-btn">
+          <text class="video-play-icon">▶️</text>
+        </view>
+      </view>
+
+      <!-- 文字内容 -->
+      <text class="message-text" wx:if="{{item.content}}">{{item.content}}</text>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty" wx:if="{{messages.length === 0 && !loading}}">
+    <text class="empty-icon">📮</text>
+    <text class="empty-text">时光信箱空空如也</text>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>

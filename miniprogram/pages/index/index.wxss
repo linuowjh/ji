@@ -1,0 +1,192 @@
+/* pages/index/index.wxss */
+.banner {
+  height: 400rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16rpx;
+  margin-bottom: 30rpx;
+}
+
+.banner-content {
+  text-align: center;
+}
+
+.banner-title {
+  display: block;
+  font-size: 72rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+
+.banner-subtitle {
+  display: block;
+  font-size: 28rpx;
+  color: #ecf0f1;
+}
+
+.quick-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 40rpx;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+  width: 200rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.action-icon {
+  width: 80rpx;
+  height: 80rpx;
+  margin-bottom: 16rpx;
+}
+
+.action-text {
+  font-size: 28rpx;
+  color: #2c3e50;
+}
+
+.section {
+  margin-bottom: 40rpx;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.section-more {
+  font-size: 28rpx;
+  color: #7f8c8d;
+}
+
+.memorial-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.memorial-card {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.memorial-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-right: 30rpx;
+}
+
+.memorial-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.memorial-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 10rpx;
+}
+
+.memorial-dates {
+  font-size: 28rpx;
+  color: #7f8c8d;
+}
+
+.reminder-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.reminder-item {
+  display: flex;
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.reminder-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 120rpx;
+  margin-right: 30rpx;
+}
+
+.reminder-day {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.reminder-month {
+  font-size: 24rpx;
+  color: #7f8c8d;
+}
+
+.reminder-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.reminder-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 10rpx;
+}
+
+.reminder-desc {
+  font-size: 28rpx;
+  color: #7f8c8d;
+}
+
+.guide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80rpx 40rpx;
+  text-align: center;
+}
+
+.guide-image {
+  width: 300rpx;
+  height: 300rpx;
+  margin-bottom: 40rpx;
+}
+
+.guide-text {
+  font-size: 32rpx;
+  color: #7f8c8d;
+  margin-bottom: 40rpx;
+}
+
+.guide-btn {
+  width: 400rpx;
+}

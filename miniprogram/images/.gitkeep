@@ -1,0 +1,21 @@
+# TabBar图标目录
+
+请在此目录放置以下图标文件：
+
+## 必需的图标文件
+
+1. home.png - 首页图标（未选中）
+2. home-active.png - 首页图标（选中）
+3. memorial.png - 纪念馆图标（未选中）
+4. memorial-active.png - 纪念馆图标（选中）
+5. family.png - 家族圈图标（未选中）
+6. family-active.png - 家族圈图标（选中）
+7. profile.png - 我的图标（未选中）
+8. profile-active.png - 我的图标（选中）
+
+## 图标规格
+
+- 尺寸：81px * 81px
+- 格式：PNG
+- 背景：透明
+- 颜色：未选中状态使用灰色 (#7A7E83)，选中状态使用绿色 (#3cc51f)

@@ -1,0 +1,52 @@
+<!--pages/memorial/list/list.wxml-->
+<view class="container">
+  <!-- 顶部操作栏 -->
+  <view class="header">
+    <text class="header-title">我的纪念馆</text>
+    <button class="btn-create" bindtap="createMemorial">+ 创建</button>
+  </view>
+
+  <!-- 纪念馆列表 -->
+  <view class="memorial-list" wx:if="{{memorials.length > 0}}">
+    <view class="memorial-item card" wx:for="{{memorials}}" wx:key="id" bindtap="goToDetail" data-id="{{item.id}}">
+      <image class="memorial-cover" src="{{item.avatarUrl}}" mode="aspectFill"></image>
+      <view class="memorial-content">
+        <view class="memorial-header">
+          <text class="memorial-name">{{item.deceasedName}}</text>
+          <view class="memorial-badge" wx:if="{{item.privacyLevel === 2}}">
+            <text class="badge-text">私密</text>
+          </view>
+        </view>
+        <text class="memorial-dates">{{item.birthDate}} - {{item.deathDate}}</text>
+        <text class="memorial-bio">{{item.biography}}</text>
+        <view class="memorial-stats">
+          <view class="stat-item">
+            <text class="stat-icon">🕯️</text>
+            <text class="stat-text">{{item.worshipCount || 0}}次祭扫</text>
+          </view>
+          <view class="stat-item">
+            <text class="stat-icon">👥</text>
+            <text class="stat-text">{{item.visitorCount || 0}}位访客</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty" wx:if="{{memorials.length === 0 && !loading}}">
+    <image class="empty-image" src="/images/empty.png" mode="aspectFit"></image>
+    <text class="empty-text">还没有创建纪念馆</text>
+    <button class="btn-primary" bindtap="createMemorial">立即创建</button>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 没有更多 -->
+  <view class="no-more" wx:if="{{!hasMore && memorials.length > 0}}">
+    <text class="no-more-text">没有更多了</text>
+  </view>
+</view>
