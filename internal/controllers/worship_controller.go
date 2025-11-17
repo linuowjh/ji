@@ -514,11 +514,36 @@ func (c *WorshipController) GetWorshipRecords(ctx *gin.Context) {
 		return
 	}
 
+	// 转换数据格式，添加友好的显示字段
+	formattedRecords := make([]gin.H, 0, len(records))
+	worshipTypeMap := map[string]string{
+		"flower":  "献了鲜花",
+		"candle":  "点燃了蜡烛",
+		"incense": "敬献了香火",
+		"tribute": "供奉了供品",
+		"prayer":  "送上了祈福",
+	}
+
+	for _, record := range records {
+		formattedRecord := gin.H{
+			"id":              record.ID,
+			"memorialId":      record.MemorialID,
+			"userId":          record.UserID,
+			"worshipType":     record.WorshipType,
+			"worshipTypeText": worshipTypeMap[record.WorshipType],
+			"content":         record.Content,
+			"createdAt":       record.CreatedAt,
+			"userName":        record.User.Nickname,
+			"userAvatar":      record.User.AvatarURL,
+		}
+		formattedRecords = append(formattedRecords, formattedRecord)
+	}
+
 	ctx.JSON(http.StatusOK, APIResponse{
 		Code:    0,
 		Message: "获取成功",
 		Data: gin.H{
-			"list":      records,
+			"list":      formattedRecords,
 			"total":     total,
 			"page":      page,
 			"page_size": pageSize,
@@ -705,7 +730,7 @@ func (c *WorshipController) GetWorshipStatistics(ctx *gin.Context) {
 // GetPrayerCardTemplates 获取祈福卡模板
 func (c *WorshipController) GetPrayerCardTemplates(ctx *gin.Context) {
 	templates := c.worshipService.GetPrayerCardTemplates()
-	
+
 	ctx.JSON(http.StatusOK, APIResponse{
 		Code:    0,
 		Message: "获取成功",
@@ -933,7 +958,7 @@ func (c *WorshipController) AnalyzeMessageEmotion(ctx *gin.Context) {
 func (c *WorshipController) GetMessageReplySuggestions(ctx *gin.Context) {
 	messageType := ctx.Query("message_type")
 	content := ctx.Query("content")
-	
+
 	if messageType == "" {
 		ctx.JSON(http.StatusBadRequest, APIResponse{
 			Code:    1001,
@@ -964,7 +989,7 @@ func (c *WorshipController) GetMessageReplySuggestions(ctx *gin.Context) {
 func (c *WorshipController) GetMessageCreationTips(ctx *gin.Context) {
 	memorialID := ctx.Param("memorial_id")
 	messageType := ctx.Query("message_type")
-	
+
 	if memorialID == "" {
 		ctx.JSON(http.StatusBadRequest, APIResponse{
 			Code:    1001,
@@ -972,7 +997,7 @@ func (c *WorshipController) GetMessageCreationTips(ctx *gin.Context) {
 		})
 		return
 	}
-	
+
 	if messageType == "" {
 		ctx.JSON(http.StatusBadRequest, APIResponse{
 			Code:    1001,

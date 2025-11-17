@@ -17,6 +17,14 @@ Page({
     }
   },
 
+  onShow() {
+    // 从祭扫页面返回时刷新数据
+    if (this.data.memorialId) {
+      this.loadMemorialDetail()
+      this.loadRecentWorship()
+    }
+  },
+
   // 加载纪念馆详情
   loadMemorialDetail() {
     wx.showLoading({ title: '加载中...' })
@@ -66,7 +74,7 @@ Page({
       success: res => {
         if (res.data.code === 0) {
           this.setData({
-            recentWorship: res.data.data || []
+            recentWorship: res.data.data.list || []
           })
         }
       }

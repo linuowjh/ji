@@ -1,0 +1,241 @@
+/* pages/login/login.wxss */
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+}
+
+.login-card {
+  width: 100%;
+  background: #fff;
+  border-radius: 32rpx;
+  padding: 60rpx 40rpx;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.2);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.logo {
+  width: 160rpx;
+  height: 160rpx;
+  margin-bottom: 30rpx;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 16rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: #7f8c8d;
+}
+
+/* 授权状态 */
+.auth-status {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  margin-bottom: 40rpx;
+  padding: 30rpx;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.status-item.completed .status-icon {
+  background: #38ef7d;
+  color: #fff;
+}
+
+.status-icon {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  background: #ecf0f1;
+  color: #7f8c8d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.status-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.status-title {
+  font-size: 30rpx;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.status-desc {
+  font-size: 24rpx;
+  color: #7f8c8d;
+}
+
+/* 表单 */
+.user-form {
+  margin-bottom: 40rpx;
+}
+
+.form-item {
+  margin-bottom: 30rpx;
+}
+
+.form-label {
+  display: block;
+  font-size: 28rpx;
+  color: #2c3e50;
+  margin-bottom: 16rpx;
+  font-weight: 500;
+}
+
+.avatar-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 30rpx;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+  border: 2rpx dashed #bdc3c7;
+}
+
+.avatar-preview {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-bottom: 16rpx;
+  border: 4rpx solid #667eea;
+}
+
+.avatar-tip {
+  font-size: 24rpx;
+  color: #7f8c8d;
+}
+
+.nickname-input {
+  width: 100%;
+  height: 88rpx;
+  padding: 0 24rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  color: #2c3e50;
+  border: 2rpx solid #ecf0f1;
+}
+
+.phone-auth-btn {
+  width: 100%;
+  height: 88rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  border: 2rpx solid #667eea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.phone-auth-btn.completed {
+  background: #e8f5e9;
+  border-color: #38ef7d;
+}
+
+.phone-text {
+  font-size: 30rpx;
+  color: #667eea;
+}
+
+.phone-auth-btn.completed .phone-text {
+  color: #38ef7d;
+}
+
+/* 按钮 */
+.auth-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  margin-bottom: 40rpx;
+}
+
+.auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+  height: 96rpx;
+  border-radius: 48rpx;
+  font-size: 32rpx;
+  border: none;
+  transition: all 0.3s;
+}
+
+.auth-btn.success {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: #fff;
+}
+
+.auth-btn[disabled] {
+  background: #ecf0f1;
+  color: #bdc3c7;
+}
+
+.btn-icon {
+  font-size: 40rpx;
+}
+
+.btn-text {
+  font-size: 32rpx;
+  font-weight: 500;
+}
+
+/* 进度提示 */
+.progress-hint {
+  text-align: center;
+  margin-top: 20rpx;
+}
+
+.hint-text {
+  font-size: 26rpx;
+  color: #e74c3c;
+  font-weight: 500;
+}
+
+/* 提示 */
+.tips {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  padding: 30rpx;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+}
+
+.tip-text {
+  font-size: 24rpx;
+  color: #7f8c8d;
+  line-height: 1.6;
+}

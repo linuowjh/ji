@@ -1,0 +1,92 @@
+<!--pages/login/login.wxml-->
+<view class="container">
+  <view class="login-card">
+    <!-- Logo和标题 -->
+    <view class="header">
+      <image class="logo" src="/images/default-avatar.png" mode="aspectFit"></image>
+      <text class="title">云念纪念馆</text>
+      <text class="subtitle">让思念跨越时空</text>
+    </view>
+
+    <!-- 授权状态展示 -->
+    <view class="auth-status">
+      <!-- 头像昵称状态 -->
+      <view class="status-item {{avatarUrl && nickname ? 'completed' : ''}}">
+        <text class="status-icon">{{avatarUrl && nickname ? '✓' : '1'}}</text>
+        <view class="status-content">
+          <text class="status-title">设置头像和昵称</text>
+          <text class="status-desc" wx:if="{{avatarUrl && nickname}}">已完成</text>
+          <text class="status-desc" wx:else>请选择头像并输入昵称</text>
+        </view>
+      </view>
+
+      <!-- 手机号状态 -->
+      <view class="status-item {{hasPhone ? 'completed' : ''}}">
+        <text class="status-icon">{{hasPhone ? '✓' : '2'}}</text>
+        <view class="status-content">
+          <text class="status-title">授权手机号</text>
+          <text class="status-desc" wx:if="{{hasPhone}}">已完成</text>
+          <text class="status-desc" wx:else>用于账号安全</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 用户信息填写表单 -->
+    <view class="user-form">
+      <view class="form-item">
+        <text class="form-label">头像</text>
+        <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+          <image class="avatar-preview" src="{{avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+          <text class="avatar-tip">{{avatarUrl ? '点击更换头像' : '点击选择头像'}}</text>
+        </button>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">昵称</text>
+        <input 
+          class="nickname-input" 
+          type="nickname" 
+          placeholder="请输入昵称"
+          value="{{nickname}}"
+          bindinput="onNicknameInput"
+          maxlength="20"
+        />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">手机号</text>
+        <button 
+          class="phone-auth-btn {{hasPhone ? 'completed' : ''}}"
+          open-type="getPhoneNumber"
+          bindgetphonenumber="getPhoneNumber">
+          <text class="phone-text">{{hasPhone ? '✓ 已授权手机号' : '点击授权手机号'}}</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- 登录按钮 -->
+    <view class="auth-section">
+      <button 
+        class="auth-btn success"
+        bindtap="completeLogin"
+        disabled="{{!nickname || !avatarUrl || !hasPhone}}">
+        <text class="btn-icon">✓</text>
+        <text class="btn-text">完成登录</text>
+      </button>
+      
+      <!-- 进度提示 -->
+      <view class="progress-hint" wx:if="{{!nickname || !avatarUrl || !hasPhone}}">
+        <text class="hint-text">
+          {{!avatarUrl ? '请先选择头像' : !nickname ? '请先输入昵称' : '请先授权手机号'}}
+        </text>
+      </view>
+    </view>
+
+    <!-- 提示信息 -->
+    <view class="tips">
+      <text class="tip-text">• 请依次完成头像、昵称和手机号授权</text>
+      <text class="tip-text">• 所有信息均为必填项</text>
+      <text class="tip-text">• 我们承诺保护您的隐私安全</text>
+    </view>
+  </view>
+</view>

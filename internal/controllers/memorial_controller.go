@@ -95,11 +95,42 @@ func (c *MemorialController) GetMemorial(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, APIResponse{
-		Code:    0,
-		Message: "获取成功",
-		Data:    memorial,
-	})
+	// 获取统计信息
+	stats, err := c.memorialService.GetMemorialStatistics(memorialID)
+	if err == nil && stats != nil {
+		// 将统计信息添加到响应中
+		response := gin.H{
+			"id":             memorial.ID,
+			"creatorId":      memorial.CreatorID,
+			"deceasedName":   memorial.DeceasedName,
+			"birthDate":      memorial.BirthDate,
+			"deathDate":      memorial.DeathDate,
+			"biography":      memorial.Biography,
+			"avatarUrl":      memorial.AvatarURL,
+			"themeStyle":     memorial.ThemeStyle,
+			"tombstoneStyle": memorial.TombstoneStyle,
+			"epitaph":        memorial.Epitaph,
+			"privacyLevel":   memorial.PrivacyLevel,
+			"status":         memorial.Status,
+			"createdAt":      memorial.CreatedAt,
+			"updatedAt":      memorial.UpdatedAt,
+			"creator":        memorial.Creator,
+			"worshipCount":   stats["worship_count"],
+			"visitorCount":   stats["visitor_count"],
+			"prayerCount":    stats["prayer_count"],
+		}
+		ctx.JSON(http.StatusOK, APIResponse{
+			Code:    0,
+			Message: "获取成功",
+			Data:    response,
+		})
+	} else {
+		ctx.JSON(http.StatusOK, APIResponse{
+			Code:    0,
+			Message: "获取成功",
+			Data:    memorial,
+		})
+	}
 }
 
 // UpdateMemorial 更新纪念馆信息

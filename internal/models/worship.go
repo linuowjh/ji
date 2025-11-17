@@ -8,11 +8,11 @@ import (
 
 type WorshipRecord struct {
 	ID          string         `json:"id" gorm:"primaryKey;type:varchar(36);comment:祭扫记录ID"`
-	MemorialID  string         `json:"memorial_id" gorm:"type:varchar(36);not null;index;comment:纪念馆ID"`
-	UserID      string         `json:"user_id" gorm:"type:varchar(36);not null;index;comment:用户ID"`
-	WorshipType string         `json:"worship_type" gorm:"type:varchar(20);not null;comment:祭扫类型:flower献花 candle点烛 incense上香 tribute供品 prayer祈福"`
+	MemorialID  string         `json:"memorialId" gorm:"type:varchar(36);not null;index;comment:纪念馆ID"`
+	UserID      string         `json:"userId" gorm:"type:varchar(36);not null;index;comment:用户ID"`
+	WorshipType string         `json:"worshipType" gorm:"type:varchar(20);not null;comment:祭扫类型:flower献花 candle点烛 incense上香 tribute供品 prayer祈福"`
 	Content     string         `json:"content" gorm:"type:json;comment:祭扫内容(JSON格式)"`
-	CreatedAt   time.Time      `json:"created_at" gorm:"comment:创建时间"`
+	CreatedAt   time.Time      `json:"createdAt" gorm:"comment:创建时间"`
 	UpdatedAt   time.Time      `json:"updated_at" gorm:"comment:更新时间"`
 	DeletedAt   gorm.DeletedAt `json:"-" gorm:"index;comment:删除时间"`
 

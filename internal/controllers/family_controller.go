@@ -138,10 +138,36 @@ func (c *FamilyController) GetFamily(ctx *gin.Context) {
 		return
 	}
 
+	// 获取统计数据
+	stats, err := c.familyService.GetFamilyStatistics(familyID)
+	if err != nil {
+		// 统计数据获取失败不影响主流程，使用默认值
+		stats = map[string]interface{}{
+			"memberCount":   0,
+			"memorialCount": 0,
+			"activityCount": 0,
+		}
+	}
+
+	// 合并family数据和统计数据
+	response := gin.H{
+		"id":            family.ID,
+		"name":          family.Name,
+		"creatorId":     family.CreatorID,
+		"description":   family.Description,
+		"inviteCode":    family.InviteCode,
+		"createdAt":     family.CreatedAt,
+		"updatedAt":     family.UpdatedAt,
+		"creator":       family.Creator,
+		"memberCount":   stats["memberCount"],
+		"memorialCount": stats["memorialCount"],
+		"activityCount": stats["activityCount"],
+	}
+
 	ctx.JSON(http.StatusOK, APIResponse{
 		Code:    0,
 		Message: "获取成功",
-		Data:    family,
+		Data:    response,
 	})
 }
 

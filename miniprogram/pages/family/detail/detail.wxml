@@ -53,14 +53,17 @@
   <!-- 成员列表 -->
   <view class="member-list" wx:if="{{activeTab === 'member'}}">
     <view class="member-item" wx:for="{{members}}" wx:key="id">
-      <image class="member-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+      <image class="member-avatar" src="{{item.user.avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill"></image>
       <view class="member-info">
-        <text class="member-name">{{item.nickname}}</text>
+        <text class="member-name">{{item.user.nickname || '未知用户'}}</text>
         <text class="member-role">加入时间：{{item.joinedAt}}</text>
       </view>
       <view class="member-badge" wx:if="{{item.role === 'admin'}}">
         <text class="badge-text">管理员</text>
       </view>
+    </view>
+    <view class="empty" wx:if="{{members.length === 0}}">
+      <text class="empty-text">暂无成员</text>
     </view>
   </view>
 </view>

@@ -184,31 +184,31 @@ func (s *FamilyService) DeleteFamily(userID, familyID string) error {
 
 	// 删除家族圈及其相关数据
 	tx := s.db.Begin()
-	
+
 	// 删除家族成员
 	if err := tx.Where("family_id = ?", familyID).Delete(&models.FamilyMember{}).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
-	
+
 	// 删除家族邀请
 	if err := tx.Where("family_id = ?", familyID).Delete(&models.FamilyInvitation{}).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
-	
+
 	// 删除家族活动
 	if err := tx.Where("family_id = ?", familyID).Delete(&models.FamilyActivity{}).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
-	
+
 	// 删除纪念馆关联
 	if err := tx.Where("family_id = ?", familyID).Delete(&models.MemorialFamily{}).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
-	
+
 	// 删除家族圈
 	if err := tx.Delete(&family).Error; err != nil {
 		tx.Rollback()
@@ -235,7 +235,7 @@ func (s *FamilyService) InviteMembers(userID, familyID string, req *InviteFamily
 
 		// 检查是否已经邀请过
 		var existingInvitation models.FamilyInvitation
-		err := tx.Where("family_id = ? AND invitee_id = ? AND status IN (?)", 
+		err := tx.Where("family_id = ? AND invitee_id = ? AND status IN (?)",
 			familyID, inviteeID, []string{"pending", "accepted"}).
 			First(&existingInvitation).Error
 
@@ -735,7 +735,7 @@ func (s *FamilyService) GetUpcomingReminders(userID, familyID string) ([]*models
 
 	var reminders []*models.MemorialReminder
 	err := s.db.Preload("Memorial").
-		Where("memorial_id IN (?) AND is_active = ? AND reminder_date BETWEEN ? AND ?", 
+		Where("memorial_id IN (?) AND is_active = ? AND reminder_date BETWEEN ? AND ?",
 			memorialIDs, true, now.Format("2006-01-02"), threeDaysLater.Format("2006-01-02")).
 		Order("reminder_date ASC").
 		Find(&reminders).Error
@@ -815,12 +815,12 @@ func (s *FamilyService) InitiateCollectiveWorship(userID, familyID string, req *
 
 	// 创建集体祭扫活动
 	activityContent := map[string]interface{}{
-		"worship_type":   req.WorshipType,
-		"content":        req.Content,
-		"schedule_time":  req.ScheduleTime,
-		"initiator_id":   userID,
-		"participants":   []string{userID}, // 发起者自动参与
-		"status":         "active",
+		"worship_type":  req.WorshipType,
+		"content":       req.Content,
+		"schedule_time": req.ScheduleTime,
+		"initiator_id":  userID,
+		"participants":  []string{userID}, // 发起者自动参与
+		"status":        "active",
 	}
 
 	// 记录活动
@@ -837,7 +837,7 @@ func (s *FamilyService) JoinCollectiveWorship(userID, familyID, activityID strin
 	}
 
 	var activity models.FamilyActivity
-	err := s.db.First(&activity, "id = ? AND family_id = ? AND activity_type = ?", 
+	err := s.db.First(&activity, "id = ? AND family_id = ? AND activity_type = ?",
 		activityID, familyID, "collective_worship").Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -1519,4 +1519,26 @@ func (s *FamilyService) recordActivity(familyID, userID, memorialID, activityTyp
 	}
 
 	s.db.Create(activity)
+}
+
+// GetFamilyStatistics 获取家族圈统计数据
+func (s *FamilyService) GetFamilyStatistics(familyID string) (map[string]interface{}, error) {
+	stats := make(map[string]interface{})
+
+	// 统计成员数量
+	var memberCount int64
+	s.db.Model(&models.FamilyMember{}).Where("family_id = ?", familyID).Count(&memberCount)
+	stats["memberCount"] = memberCount
+
+	// 统计关联的纪念馆数量
+	var memorialCount int64
+	s.db.Model(&models.MemorialFamily{}).Where("family_id = ?", familyID).Count(&memorialCount)
+	stats["memorialCount"] = memorialCount
+
+	// 统计活动数量
+	var activityCount int64
+	s.db.Model(&models.FamilyActivity{}).Where("family_id = ?", familyID).Count(&activityCount)
+	stats["activityCount"] = activityCount
+
+	return stats, nil
 }

@@ -7,8 +7,10 @@ Page({
     memorial: null,
     activeTab: 'flower',
     flowerType: 'chrysanthemum',
-    candleCount: 1,
+    candleType: 'red',
+    candleDuration: 60,
     incenseCount: 3,
+    incenseType: 'sandalwood',
     tributeType: 'fruit',
     prayerText: ''
   },
@@ -65,28 +67,32 @@ Page({
   // 献花
   offerFlower() {
     this.performWorship('flower', {
-      flowerType: this.data.flowerType
+      flowerType: this.data.flowerType,
+      quantity: 1  // 默认数量为1
     })
   },
 
   // 点烛
   lightCandle() {
     this.performWorship('candle', {
-      candleCount: this.data.candleCount
+      candleType: this.data.candleType,
+      duration: this.data.candleDuration
     })
   },
 
   // 上香
   offerIncense() {
     this.performWorship('incense', {
-      incenseCount: this.data.incenseCount
+      incenseCount: this.data.incenseCount,
+      incenseType: this.data.incenseType
     })
   },
 
   // 供奉供品
   offerTribute() {
     this.performWorship('tribute', {
-      tributeType: this.data.tributeType
+      tributeType: this.data.tributeType,
+      items: ['水果']  // 默认供品项目
     })
   },
 
@@ -109,17 +115,24 @@ Page({
   performWorship(type, data) {
     wx.showLoading({ title: '提交中...' })
 
+    // 构建正确的URL
+    const typeMap = {
+      'flower': 'flowers',
+      'candle': 'candles',
+      'incense': 'incense',
+      'tribute': 'tributes',
+      'prayer': 'prayers'
+    }
+    const endpoint = typeMap[type] || type
+
     wx.request({
-      url: `${app.globalData.apiBase}/api/v1/worship/${type}`,
+      url: `${app.globalData.apiBase}/api/v1/worship/memorials/${this.data.memorialId}/${endpoint}`,
       method: 'POST',
       header: {
         'Authorization': `Bearer ${app.globalData.token}`,
         'Content-Type': 'application/json'
       },
-      data: {
-        memorialId: this.data.memorialId,
-        ...data
-      },
+      data: data,
       success: res => {
         wx.hideLoading()
         if (res.data.code === 0) {
@@ -138,6 +151,9 @@ Page({
           if (type === 'prayer') {
             this.setData({ prayerText: '' })
           }
+          
+          // 刷新纪念馆数据（更新祭扫次数）
+          this.loadMemorial()
         } else {
           wx.showToast({
             title: res.data.message || '操作失败',

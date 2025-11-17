@@ -30,38 +30,38 @@ func (s *WorshipService) SetFamilyService(familyService *FamilyService) {
 
 // 献花请求结构
 type OfferFlowersRequest struct {
-	FlowerType   string `json:"flower_type" binding:"required"`   // 花卉类型：chrysanthemum|carnation|lily|rose
+	FlowerType   string `json:"flowerType" binding:"required"`     // 花卉类型：chrysanthemum|carnation|lily|rose
 	Quantity     int    `json:"quantity" binding:"required,min=1"` // 数量
-	Message      string `json:"message"`                          // 献花留言
-	IsScheduled  bool   `json:"is_scheduled"`                     // 是否定时送花
-	ScheduleTime string `json:"schedule_time"`                    // 定时时间 (格式: "2006-01-02 15:04:05")
+	Message      string `json:"message"`                           // 献花留言
+	IsScheduled  bool   `json:"isScheduled"`                       // 是否定时送花
+	ScheduleTime string `json:"scheduleTime"`                      // 定时时间 (格式: "2006-01-02 15:04:05")
 }
 
 // 点烛请求结构
 type LightCandleRequest struct {
-	CandleType string `json:"candle_type" binding:"required"` // 蜡烛类型：red|white|yellow
-	Duration   int    `json:"duration" binding:"required"`    // 燃烧时长(分钟)
-	Message    string `json:"message"`                        // 点烛留言
+	CandleType string `json:"candleType" binding:"required"` // 蜡烛类型：red|white|yellow
+	Duration   int    `json:"duration" binding:"required"`   // 燃烧时长(分钟)
+	Message    string `json:"message"`                       // 点烛留言
 }
 
 // 上香请求结构
 type OfferIncenseRequest struct {
-	IncenseCount int    `json:"incense_count" binding:"required,oneof=3 9"` // 香柱数量：3或9
-	IncenseType  string `json:"incense_type" binding:"required"`            // 香的类型：sandalwood|agarwood|traditional
-	Message      string `json:"message"`                                    // 上香留言
+	IncenseCount int    `json:"incenseCount" binding:"required,oneof=3 9"` // 香柱数量：3或9
+	IncenseType  string `json:"incenseType" binding:"required"`            // 香的类型：sandalwood|agarwood|traditional
+	Message      string `json:"message"`                                   // 上香留言
 }
 
 // 供奉供品请求结构
 type OfferTributeRequest struct {
-	TributeType string   `json:"tribute_type" binding:"required"` // 供品类型：fruit|pastry|wine|tea
-	Items       []string `json:"items" binding:"required"`        // 具体供品项目
-	Message     string   `json:"message"`                         // 供奉留言
+	TributeType string   `json:"tributeType" binding:"required"` // 供品类型：fruit|pastry|wine|tea
+	Items       []string `json:"items" binding:"required"`       // 具体供品项目
+	Message     string   `json:"message"`                        // 供奉留言
 }
 
 // 祈福请求结构
 type CreatePrayerRequest struct {
-	Content  string `json:"content" binding:"required"`  // 祈福内容
-	IsPublic bool   `json:"is_public"`                   // 是否公开显示
+	Content  string `json:"content" binding:"required"` // 祈福内容
+	IsPublic bool   `json:"is_public"`                  // 是否公开显示
 }
 
 // 留言请求结构
@@ -437,7 +437,7 @@ func (s *WorshipService) RenewCandle(userID, memorialID string, additionalMinute
 
 	// 查找用户最近的点烛记录
 	var record models.WorshipRecord
-	err := s.db.Where("memorial_id = ? AND user_id = ? AND worship_type = ?", 
+	err := s.db.Where("memorial_id = ? AND user_id = ? AND worship_type = ?",
 		memorialID, userID, "candle").
 		Order("created_at DESC").
 		First(&record).Error
@@ -510,11 +510,11 @@ func (s *WorshipService) GetActiveCandleStatus(userID, memorialID string) (map[s
 		// 检查蜡烛是否还在燃烧
 		if time.Now().Before(expireTime) {
 			activeCandlesCount++
-			
+
 			// 获取用户信息
 			var user models.User
 			s.db.First(&user, "id = ?", record.UserID)
-			
+
 			activeCandlesByUser = append(activeCandlesByUser, map[string]interface{}{
 				"user_id":     record.UserID,
 				"user_name":   user.Nickname,
@@ -552,7 +552,7 @@ func (s *WorshipService) validateMemorialAccess(userID, memorialID string) error
 				Joins("JOIN memorial_families mf ON fm.family_id = mf.family_id").
 				Where("mf.memorial_id = ? AND fm.user_id = ?", memorialID, userID).
 				Count(&count)
-			
+
 			if count == 0 {
 				return errors.New("无权访问此纪念馆")
 			}
@@ -573,7 +573,7 @@ func (s *WorshipService) GetWorshipStatistics(userID, memorialID string) (map[st
 
 	// 统计各类祭扫行为的数量
 	worshipTypes := []string{"flower", "candle", "incense", "tribute", "prayer", "message"}
-	
+
 	for _, worshipType := range worshipTypes {
 		var count int64
 		s.db.Model(&models.WorshipRecord{}).
@@ -656,13 +656,13 @@ func (s *WorshipService) GeneratePrayerCard(templateID, content, userName string
 	// 这里应该调用图片生成服务，将祈福内容渲染到模板上
 	// 目前返回模拟的生成结果
 	cardURL := fmt.Sprintf("/generated/prayer-cards/%s-%d.jpg", templateID, time.Now().Unix())
-	
+
 	// 实际实现中，这里会：
 	// 1. 根据templateID获取模板
 	// 2. 将content和userName渲染到模板上
 	// 3. 生成图片并上传到对象存储
 	// 4. 返回生成的图片URL
-	
+
 	return cardURL, nil
 }
 
@@ -719,7 +719,7 @@ func (s *WorshipService) GetUserWorshipHistory(userID string, page, pageSize int
 	// 统计各类祭扫行为
 	var stats map[string]int64 = make(map[string]int64)
 	worshipTypes := []string{"flower", "candle", "incense", "tribute", "prayer", "message"}
-	
+
 	for _, worshipType := range worshipTypes {
 		var count int64
 		s.db.Model(&models.WorshipRecord{}).
@@ -740,10 +740,10 @@ func (s *WorshipService) GetUserWorshipHistory(userID string, page, pageSize int
 		Count(&memorialCount)
 
 	return map[string]interface{}{
-		"records":         records,
-		"total_records":   totalCount,
-		"memorial_count":  memorialCount,
-		"statistics":      stats,
+		"records":        records,
+		"total_records":  totalCount,
+		"memorial_count": memorialCount,
+		"statistics":     stats,
 		"page":           page,
 		"page_size":      pageSize,
 	}, nil
@@ -751,11 +751,11 @@ func (s *WorshipService) GetUserWorshipHistory(userID string, page, pageSize int
 
 // 创建定时祈福提醒
 type ScheduledPrayerRequest struct {
-	MemorialID   string    `json:"memorial_id" binding:"required"`
-	Content      string    `json:"content" binding:"required"`
-	ScheduleTime time.Time `json:"schedule_time" binding:"required"`
-	IsRecurring  bool      `json:"is_recurring"`
-	RecurringType string   `json:"recurring_type"` // daily|weekly|monthly|yearly
+	MemorialID    string    `json:"memorial_id" binding:"required"`
+	Content       string    `json:"content" binding:"required"`
+	ScheduleTime  time.Time `json:"schedule_time" binding:"required"`
+	IsRecurring   bool      `json:"is_recurring"`
+	RecurringType string    `json:"recurring_type"` // daily|weekly|monthly|yearly
 }
 
 func (s *WorshipService) CreateScheduledPrayer(userID string, req *ScheduledPrayerRequest) error {
@@ -810,27 +810,27 @@ func (s *WorshipService) GetPopularPrayerContents(limit int) ([]string, error) {
 }
 
 // EmotionAnalysisResult 情感分析结果
-type EmotionAnalysisResult struct{
-	Emotion    string  `json:"emotion"`     // happy|sad|nostalgic|grateful|peaceful
-	Confidence float64 `json:"confidence"`  // 置信度 0-1
+type EmotionAnalysisResult struct {
+	Emotion    string   `json:"emotion"`    // happy|sad|nostalgic|grateful|peaceful
+	Confidence float64  `json:"confidence"` // 置信度 0-1
 	Keywords   []string `json:"keywords"`   // 关键词
-	Suggestion string  `json:"suggestion"`  // 回复建议
+	Suggestion string   `json:"suggestion"` // 回复建议
 }
 
 // 分析留言情感
 func (s *WorshipService) AnalyzeMessageEmotion(content string) (*EmotionAnalysisResult, error) {
 	// 这里应该调用情感分析API，目前返回模拟结果
 	// 实际实现中可以使用腾讯云文本分析API或其他NLP服务
-	
+
 	// 简单的关键词匹配来模拟情感分析
 	sadKeywords := []string{"想念", "思念", "难过", "伤心", "离别", "痛苦"}
 	happyKeywords := []string{"快乐", "开心", "幸福", "美好", "温暖", "笑容"}
 	nostalgicKeywords := []string{"回忆", "往昔", "从前", "过去", "曾经", "那时"}
 	gratefulKeywords := []string{"感谢", "感恩", "谢谢", "感激", "恩情", "教诲"}
 	peacefulKeywords := []string{"安息", "安好", "平静", "宁静", "安详", "祝福"}
-	
+
 	content = strings.ToLower(content)
-	
+
 	// 统计各种情感关键词出现次数
 	emotionScores := map[string]int{
 		"sad":       0,
@@ -839,55 +839,55 @@ func (s *WorshipService) AnalyzeMessageEmotion(content string) (*EmotionAnalysis
 		"grateful":  0,
 		"peaceful":  0,
 	}
-	
+
 	var foundKeywords []string
-	
+
 	for _, keyword := range sadKeywords {
 		if strings.Contains(content, keyword) {
 			emotionScores["sad"]++
 			foundKeywords = append(foundKeywords, keyword)
 		}
 	}
-	
+
 	for _, keyword := range happyKeywords {
 		if strings.Contains(content, keyword) {
 			emotionScores["happy"]++
 			foundKeywords = append(foundKeywords, keyword)
 		}
 	}
-	
+
 	for _, keyword := range nostalgicKeywords {
 		if strings.Contains(content, keyword) {
 			emotionScores["nostalgic"]++
 			foundKeywords = append(foundKeywords, keyword)
 		}
 	}
-	
+
 	for _, keyword := range gratefulKeywords {
 		if strings.Contains(content, keyword) {
 			emotionScores["grateful"]++
 			foundKeywords = append(foundKeywords, keyword)
 		}
 	}
-	
+
 	for _, keyword := range peacefulKeywords {
 		if strings.Contains(content, keyword) {
 			emotionScores["peaceful"]++
 			foundKeywords = append(foundKeywords, keyword)
 		}
 	}
-	
+
 	// 找出得分最高的情感
 	maxScore := 0
 	dominantEmotion := "peaceful" // 默认为平静
-	
+
 	for emotion, score := range emotionScores {
 		if score > maxScore {
 			maxScore = score
 			dominantEmotion = emotion
 		}
 	}
-	
+
 	// 计算置信度
 	totalKeywords := len(foundKeywords)
 	confidence := 0.5 // 默认置信度
@@ -897,7 +897,7 @@ func (s *WorshipService) AnalyzeMessageEmotion(content string) (*EmotionAnalysis
 			confidence = 1.0
 		}
 	}
-	
+
 	// 生成回复建议
 	suggestions := map[string]string{
 		"sad":       "您的思念之情让人动容，相信逝者能感受到您深深的爱意。时间会慢慢抚平伤痛，但美好的回忆会永远陪伴着您。",
@@ -906,7 +906,7 @@ func (s *WorshipService) AnalyzeMessageEmotion(content string) (*EmotionAnalysis
 		"grateful":  "您的感恩之心令人敬佩，逝者的教诲和恩情将永远指引着您前行的道路。",
 		"peaceful":  "愿逝者安息，愿您内心平静。在这个特殊的空间里，让爱与思念得到最好的表达。",
 	}
-	
+
 	return &EmotionAnalysisResult{
 		Emotion:    dominantEmotion,
 		Confidence: confidence,
@@ -918,7 +918,7 @@ func (s *WorshipService) AnalyzeMessageEmotion(content string) (*EmotionAnalysis
 // 获取留言回复建议
 func (s *WorshipService) GetMessageReplySuggestions(messageType, content string) ([]string, error) {
 	suggestions := []string{}
-	
+
 	switch messageType {
 	case "text":
 		// 基于内容分析生成建议
@@ -926,7 +926,7 @@ func (s *WorshipService) GetMessageReplySuggestions(messageType, content string)
 		if err == nil {
 			suggestions = append(suggestions, emotion.Suggestion)
 		}
-		
+
 		// 添加通用回复建议
 		suggestions = append(suggestions, []string{
 			"您的话语充满了爱与思念",
@@ -934,7 +934,7 @@ func (s *WorshipService) GetMessageReplySuggestions(messageType, content string)
 			"这份深情让人动容",
 			"愿这份爱能给您带来慰藉",
 		}...)
-		
+
 	case "audio":
 		suggestions = []string{
 			"您的声音传达了深深的思念",
@@ -942,7 +942,7 @@ func (s *WorshipService) GetMessageReplySuggestions(messageType, content string)
 			"相信逝者能听到您的呼唤",
 			"这份用心的表达很珍贵",
 		}
-		
+
 	case "video":
 		suggestions = []string{
 			"影像记录了最真挚的情感",
@@ -951,7 +951,7 @@ func (s *WorshipService) GetMessageReplySuggestions(messageType, content string)
 			"愿这份美好永远保存",
 		}
 	}
-	
+
 	return suggestions, nil
 }
 
@@ -963,7 +963,7 @@ type MessageCreationTip struct {
 
 func (s *WorshipService) GetMessageCreationTips(memorialID, messageType string) ([]MessageCreationTip, error) {
 	tips := []MessageCreationTip{}
-	
+
 	// 基于留言类型给出建议
 	switch messageType {
 	case "text":
@@ -977,7 +977,7 @@ func (s *WorshipService) GetMessageCreationTips(memorialID, messageType string) 
 				Content: "文字会永久保存，成为珍贵的纪念",
 			},
 		}...)
-		
+
 	case "audio":
 		tips = append(tips, []MessageCreationTip{
 			{
@@ -989,7 +989,7 @@ func (s *WorshipService) GetMessageCreationTips(memorialID, messageType string) 
 				Content: "建议在安静的环境中录制，时长控制在3分钟内",
 			},
 		}...)
-		
+
 	case "video":
 		tips = append(tips, []MessageCreationTip{
 			{
@@ -1002,13 +1002,13 @@ func (s *WorshipService) GetMessageCreationTips(memorialID, messageType string) 
 			},
 		}...)
 	}
-	
+
 	// 添加通用鼓励
 	tips = append(tips, MessageCreationTip{
 		Type:    "encouragement",
 		Content: "每一份真挚的表达都是对逝者最好的纪念",
 	})
-	
+
 	return tips, nil
 }
 
@@ -1016,53 +1016,53 @@ func (s *WorshipService) GetMessageCreationTips(memorialID, messageType string) 
 func (s *WorshipService) GetMemorialMessageAnalytics(memorialID string) (map[string]interface{}, error) {
 	// 统计各类型留言数量
 	var textCount, audioCount, videoCount int64
-	
+
 	s.db.Model(&models.Message{}).Where("memorial_id = ? AND message_type = ?", memorialID, "text").Count(&textCount)
 	s.db.Model(&models.Message{}).Where("memorial_id = ? AND message_type = ?", memorialID, "audio").Count(&audioCount)
 	s.db.Model(&models.Message{}).Where("memorial_id = ? AND message_type = ?", memorialID, "video").Count(&videoCount)
-	
+
 	// 统计最近30天的留言趋势
 	thirtyDaysAgo := time.Now().AddDate(0, 0, -30)
 	var recentMessages []models.Message
 	s.db.Where("memorial_id = ? AND created_at >= ?", memorialID, thirtyDaysAgo).
 		Order("created_at ASC").
 		Find(&recentMessages)
-	
+
 	// 按天统计留言数量
 	dailyStats := make(map[string]int)
 	for _, message := range recentMessages {
 		day := message.CreatedAt.Format("2006-01-02")
 		dailyStats[day]++
 	}
-	
+
 	// 统计活跃用户
 	var activeUsers int64
 	s.db.Model(&models.Message{}).
 		Where("memorial_id = ? AND created_at >= ?", memorialID, thirtyDaysAgo).
 		Distinct("user_id").
 		Count(&activeUsers)
-	
+
 	return map[string]interface{}{
 		"message_types": map[string]int64{
 			"text":  textCount,
 			"audio": audioCount,
 			"video": videoCount,
 		},
-		"daily_stats":   dailyStats,
-		"active_users":  activeUsers,
+		"daily_stats":    dailyStats,
+		"active_users":   activeUsers,
 		"total_messages": textCount + audioCount + videoCount,
 	}, nil
 }
 
 // WorshipRecordStats 祭扫记录详细统计
 type WorshipRecordStats struct {
-	TotalRecords    int64                  `json:"total_records"`
-	UniqueVisitors  int64                  `json:"unique_visitors"`
-	TypeStatistics  map[string]int64       `json:"type_statistics"`
-	MonthlyTrend    []MonthlyStats         `json:"monthly_trend"`
-	HourlyPattern   []HourlyStats          `json:"hourly_pattern"`
-	TopVisitors     []VisitorStats         `json:"top_visitors"`
-	RecentActivity  []RecentActivityStats  `json:"recent_activity"`
+	TotalRecords   int64                 `json:"total_records"`
+	UniqueVisitors int64                 `json:"unique_visitors"`
+	TypeStatistics map[string]int64      `json:"type_statistics"`
+	MonthlyTrend   []MonthlyStats        `json:"monthly_trend"`
+	HourlyPattern  []HourlyStats         `json:"hourly_pattern"`
+	TopVisitors    []VisitorStats        `json:"top_visitors"`
+	RecentActivity []RecentActivityStats `json:"recent_activity"`
 }
 
 type MonthlyStats struct {
@@ -1120,12 +1120,12 @@ func (s *WorshipService) GetDetailedWorshipStatistics(userID, memorialID string)
 	for i := 11; i >= 0; i-- {
 		month := time.Now().AddDate(0, -i, 0)
 		monthStr := month.Format("2006-01")
-		
+
 		var count int64
 		s.db.Model(&models.WorshipRecord{}).
 			Where("memorial_id = ? AND DATE_FORMAT(created_at, '%Y-%m') = ?", memorialID, monthStr).
 			Count(&count)
-		
+
 		stats.MonthlyTrend = append(stats.MonthlyTrend, MonthlyStats{
 			Month: monthStr,
 			Count: count,
@@ -1139,7 +1139,7 @@ func (s *WorshipService) GetDetailedWorshipStatistics(userID, memorialID string)
 		s.db.Model(&models.WorshipRecord{}).
 			Where("memorial_id = ? AND HOUR(created_at) = ?", memorialID, hour).
 			Count(&count)
-		
+
 		stats.HourlyPattern = append(stats.HourlyPattern, HourlyStats{
 			Hour:  hour,
 			Count: count,
@@ -1151,7 +1151,7 @@ func (s *WorshipService) GetDetailedWorshipStatistics(userID, memorialID string)
 		UserID string
 		Count  int64
 	}
-	
+
 	var visitorCounts []visitorCount
 	s.db.Model(&models.WorshipRecord{}).
 		Select("user_id, COUNT(*) as count").
@@ -1165,12 +1165,12 @@ func (s *WorshipService) GetDetailedWorshipStatistics(userID, memorialID string)
 	for _, vc := range visitorCounts {
 		var user models.User
 		s.db.First(&user, "id = ?", vc.UserID)
-		
+
 		var lastRecord models.WorshipRecord
 		s.db.Where("memorial_id = ? AND user_id = ?", memorialID, vc.UserID).
 			Order("created_at DESC").
 			First(&lastRecord)
-		
+
 		stats.TopVisitors = append(stats.TopVisitors, VisitorStats{
 			UserID:    user.ID,
 			UserName:  user.Nickname,
@@ -1185,18 +1185,18 @@ func (s *WorshipService) GetDetailedWorshipStatistics(userID, memorialID string)
 	for i := 29; i >= 0; i-- {
 		date := time.Now().AddDate(0, 0, -i)
 		dateStr := date.Format("2006-01-02")
-		
+
 		var worshipCount int64
 		s.db.Model(&models.WorshipRecord{}).
 			Where("memorial_id = ? AND DATE(created_at) = ?", memorialID, dateStr).
 			Count(&worshipCount)
-		
+
 		var visitorCount int64
 		s.db.Model(&models.WorshipRecord{}).
 			Where("memorial_id = ? AND DATE(created_at) = ?", memorialID, dateStr).
 			Distinct("user_id").
 			Count(&visitorCount)
-		
+
 		stats.RecentActivity = append(stats.RecentActivity, RecentActivityStats{
 			Date:         dateStr,
 			WorshipCount: worshipCount,
@@ -1209,14 +1209,14 @@ func (s *WorshipService) GetDetailedWorshipStatistics(userID, memorialID string)
 
 // 用户祭扫行为分析
 type UserWorshipBehavior struct {
-	UserID           string                 `json:"user_id"`
-	TotalWorships    int64                  `json:"total_worships"`
-	FavoriteType     string                 `json:"favorite_type"`
-	ActiveHours      []int                  `json:"active_hours"`
-	WorshipFrequency map[string]int64       `json:"worship_frequency"` // 按类型统计
-	MemorialCount    int64                  `json:"memorial_count"`    // 参与的纪念馆数量
-	FirstWorship     string                 `json:"first_worship"`
-	LastWorship      string                 `json:"last_worship"`
+	UserID           string           `json:"user_id"`
+	TotalWorships    int64            `json:"total_worships"`
+	FavoriteType     string           `json:"favorite_type"`
+	ActiveHours      []int            `json:"active_hours"`
+	WorshipFrequency map[string]int64 `json:"worship_frequency"` // 按类型统计
+	MemorialCount    int64            `json:"memorial_count"`    // 参与的纪念馆数量
+	FirstWorship     string           `json:"first_worship"`
+	LastWorship      string           `json:"last_worship"`
 }
 
 // 分析用户祭扫行为
@@ -1235,14 +1235,14 @@ func (s *WorshipService) AnalyzeUserWorshipBehavior(userID string) (*UserWorship
 	behavior.WorshipFrequency = make(map[string]int64)
 	worshipTypes := []string{"flower", "candle", "incense", "tribute", "prayer", "message"}
 	maxCount := int64(0)
-	
+
 	for _, worshipType := range worshipTypes {
 		var count int64
 		s.db.Model(&models.WorshipRecord{}).
 			Where("user_id = ? AND worship_type = ?", userID, worshipType).
 			Count(&count)
 		behavior.WorshipFrequency[worshipType] = count
-		
+
 		if count > maxCount {
 			maxCount = count
 			behavior.FavoriteType = worshipType
@@ -1253,23 +1253,23 @@ func (s *WorshipService) AnalyzeUserWorshipBehavior(userID string) (*UserWorship
 	hourCounts := make(map[int]int64)
 	var records []models.WorshipRecord
 	s.db.Where("user_id = ?", userID).Find(&records)
-	
+
 	for _, record := range records {
 		hour := record.CreatedAt.Hour()
 		hourCounts[hour]++
 	}
-	
+
 	// 找出最活跃的时段（前3个）
 	type hourCount struct {
 		hour  int
 		count int64
 	}
-	
+
 	var sortedHours []hourCount
 	for hour, count := range hourCounts {
 		sortedHours = append(sortedHours, hourCount{hour, count})
 	}
-	
+
 	// 简单排序（实际应该使用sort包）
 	for i := 0; i < len(sortedHours)-1; i++ {
 		for j := i + 1; j < len(sortedHours); j++ {
@@ -1278,7 +1278,7 @@ func (s *WorshipService) AnalyzeUserWorshipBehavior(userID string) (*UserWorship
 			}
 		}
 	}
-	
+
 	behavior.ActiveHours = []int{}
 	for i := 0; i < len(sortedHours) && i < 3; i++ {
 		behavior.ActiveHours = append(behavior.ActiveHours, sortedHours[i].hour)
@@ -1288,7 +1288,7 @@ func (s *WorshipService) AnalyzeUserWorshipBehavior(userID string) (*UserWorship
 	var firstRecord, lastRecord models.WorshipRecord
 	s.db.Where("user_id = ?", userID).Order("created_at ASC").First(&firstRecord)
 	s.db.Where("user_id = ?", userID).Order("created_at DESC").First(&lastRecord)
-	
+
 	if firstRecord.ID != "" {
 		behavior.FirstWorship = firstRecord.CreatedAt.Format("2006-01-02 15:04:05")
 	}
@@ -1352,7 +1352,7 @@ func (s *WorshipService) GenerateWorshipReport(userID, memorialID string, period
 	s.db.Model(&models.WorshipRecord{}).
 		Where("memorial_id = ? AND created_at >= ?", memorialID, startTime).
 		Count(&totalRecords)
-	
+
 	s.db.Model(&models.WorshipRecord{}).
 		Where("memorial_id = ? AND created_at >= ?", memorialID, startTime).
 		Distinct("user_id").
@@ -1382,7 +1382,7 @@ func (s *WorshipService) GenerateWorshipReport(userID, memorialID string, period
 	if totalRecords > 0 {
 		report.Highlights = append(report.Highlights, fmt.Sprintf("本%s共收到%d次祭扫", getPeriodName(period), totalRecords))
 		report.Highlights = append(report.Highlights, fmt.Sprintf("有%d位访客表达了思念", uniqueVisitors))
-		
+
 		// 找出最受欢迎的祭扫方式
 		maxType := ""
 		maxCount := int64(0)

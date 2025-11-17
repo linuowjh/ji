@@ -4,6 +4,7 @@ const app = getApp()
 Page({
   data: {
     userInfo: null,
+    avatarUrl: '/images/default-avatar.png',
     stats: {
       memorialCount: 0,
       worshipCount: 0,
@@ -24,25 +25,73 @@ Page({
   // 加载用户信息
   loadUserInfo() {
     if (app.globalData.userInfo) {
-      this.setData({ userInfo: app.globalData.userInfo })
-    } else {
+      this.setData({ 
+        userInfo: app.globalData.userInfo,
+        avatarUrl: app.globalData.userInfo.avatarUrl || '/images/default-avatar.png'
+      })
+    } else if (app.globalData.token) {
+      // 有 token 但没有用户信息，尝试获取
       app.getUserInfo()
         .then(userInfo => {
-          this.setData({ userInfo })
-        })
-        .catch(() => {
-          wx.showToast({
-            title: '获取用户信息失败',
-            icon: 'none'
+          this.setData({ 
+            userInfo,
+            avatarUrl: userInfo.avatarUrl || '/images/default-avatar.png'
           })
         })
+        .catch(() => {
+          // 获取失败，可能 token 过期，清除 token
+          app.globalData.token = null
+          wx.removeStorageSync('token')
+          this.setData({ 
+            userInfo: null,
+            avatarUrl: '/images/default-avatar.png'
+          })
+        })
+    } else {
+      // 没有登录
+      this.setData({ 
+        userInfo: null,
+        avatarUrl: '/images/default-avatar.png'
+      })
     }
+  },
+
+  // 执行登录
+  doLogin() {
+    wx.showLoading({ title: '登录中...' })
+    app.login()
+      .then(userInfo => {
+        wx.hideLoading()
+        this.setData({ 
+          userInfo,
+          avatarUrl: userInfo.avatarUrl || '/images/default-avatar.png'
+        })
+        this.loadStats()
+        wx.showToast({
+          title: '登录成功',
+          icon: 'success'
+        })
+      })
+      .catch(err => {
+        wx.hideLoading()
+        wx.showToast({
+          title: err || '登录失败',
+          icon: 'none'
+        })
+      })
+  },
+
+  // 头像加载失败处理
+  onAvatarError() {
+    this.setData({
+      avatarUrl: '/images/default-avatar.png'
+    })
   },
 
   // 加载统计数据
   loadStats() {
     wx.request({
-      url: `${app.globalData.apiBase}/api/v1/users/stats`,
+      url: `${app.globalData.apiBase}/api/v1/users/statistics`,
       method: 'GET',
       header: {
         'Authorization': `Bearer ${app.globalData.token}`
@@ -78,23 +127,38 @@ Page({
 
   // 前往隐私设置
   goToPrivacySettings() {
-    wx.navigateTo({
-      url: '/pages/profile/privacy/privacy'
+    wx.showToast({
+      title: '功能开发中',
+      icon: 'none'
     })
+    // TODO: 实现隐私设置页面
+    // wx.navigateTo({
+    //   url: '/pages/profile/privacy/privacy'
+    // })
   },
 
   // 前往帮助中心
   goToHelp() {
-    wx.navigateTo({
-      url: '/pages/profile/help/help'
+    wx.showToast({
+      title: '功能开发中',
+      icon: 'none'
     })
+    // TODO: 实现帮助中心页面
+    // wx.navigateTo({
+    //   url: '/pages/profile/help/help'
+    // })
   },
 
   // 前往关于我们
   goToAbout() {
-    wx.navigateTo({
-      url: '/pages/profile/about/about'
+    wx.showToast({
+      title: '功能开发中',
+      icon: 'none'
     })
+    // TODO: 实现关于我们页面
+    // wx.navigateTo({
+    //   url: '/pages/profile/about/about'
+    // })
   },
 
   // 联系客服

@@ -21,35 +21,12 @@ Page({
   // 检查登录状态
   checkLogin() {
     if (!app.globalData.token) {
-      wx.showModal({
-        title: '提示',
-        content: '请先登录',
-        success: res => {
-          if (res.confirm) {
-            this.doLogin()
-          }
-        }
+      wx.redirectTo({
+        url: '/pages/login/login'
       })
     } else {
       this.loadData()
     }
-  },
-
-  // 执行登录
-  doLogin() {
-    wx.showLoading({ title: '登录中...' })
-    app.login()
-      .then(() => {
-        wx.hideLoading()
-        this.loadData()
-      })
-      .catch(err => {
-        wx.hideLoading()
-        wx.showToast({
-          title: '登录失败',
-          icon: 'none'
-        })
-      })
   },
 
   // 加载数据

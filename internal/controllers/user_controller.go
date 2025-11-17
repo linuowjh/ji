@@ -499,3 +499,41 @@ func (c *UserController) GetUpcomingReminders(ctx *gin.Context) {
 		Data:    reminders,
 	})
 }
+
+// UpdatePhone 更新用户手机号
+func (c *UserController) UpdatePhone(ctx *gin.Context) {
+	userID, exists := ctx.Get("user_id")
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, APIResponse{
+			Code:    1002,
+			Message: "用户未登录",
+		})
+		return
+	}
+
+	var req services.UpdatePhoneRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, APIResponse{
+			Code:    1001,
+			Message: "请求参数错误: " + err.Error(),
+		})
+		return
+	}
+
+	phone, err := c.userService.UpdatePhone(userID.(string), req.Code)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, APIResponse{
+			Code:    1005,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, APIResponse{
+		Code:    0,
+		Message: "更新成功",
+		Data: gin.H{
+			"phone": phone,
+		},
+	})
+}

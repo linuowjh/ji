@@ -86,6 +86,7 @@ func Setup(db *gorm.DB, rdb *redis.Client, cfg *config.Config) *gin.Engine {
 			{
 				users.GET("/profile", userController.GetUserInfo)
 				users.PUT("/profile", userController.UpdateUserInfo)
+				users.POST("/phone", userController.UpdatePhone)
 				users.GET("/memorials", userController.GetUserMemorials)
 				users.GET("/worship-records", userController.GetUserWorshipRecords)
 

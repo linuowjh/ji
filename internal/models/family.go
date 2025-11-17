@@ -27,10 +27,10 @@ func (Family) TableName() string {
 
 type FamilyMember struct {
 	ID       string    `json:"id" gorm:"primaryKey;type:varchar(36);comment:成员ID"`
-	FamilyID string    `json:"family_id" gorm:"type:varchar(36);not null;index;comment:家族ID"`
-	UserID   string    `json:"user_id" gorm:"type:varchar(36);not null;index;comment:用户ID"`
+	FamilyID string    `json:"familyId" gorm:"column:family_id;type:varchar(36);not null;index;comment:家族ID"`
+	UserID   string    `json:"userId" gorm:"column:user_id;type:varchar(36);not null;index;comment:用户ID"`
 	Role     string    `json:"role" gorm:"type:varchar(20);default:member;comment:角色:admin管理员 member成员"`
-	JoinedAt time.Time `json:"joined_at" gorm:"comment:加入时间"`
+	JoinedAt time.Time `json:"joinedAt" gorm:"column:joined_at;comment:加入时间"`
 
 	// 关联关系
 	Family Family `json:"family" gorm:"foreignKey:FamilyID"`
@@ -87,13 +87,13 @@ func (FamilyInvitation) TableName() string {
 // FamilyActivity 家族活动记录
 type FamilyActivity struct {
 	ID           string         `json:"id" gorm:"primaryKey;type:varchar(36)"`
-	FamilyID     string         `json:"family_id" gorm:"type:varchar(36);not null;index"`
-	UserID       string         `json:"user_id" gorm:"type:varchar(36);not null;index"`
-	MemorialID   string         `json:"memorial_id" gorm:"type:varchar(36);index"`
-	ActivityType string         `json:"activity_type" gorm:"type:varchar(30);not null;comment:worship|join|create_memorial|create_story"`
+	FamilyID     string         `json:"familyId" gorm:"column:family_id;type:varchar(36);not null;index"`
+	UserID       string         `json:"userId" gorm:"column:user_id;type:varchar(36);not null;index"`
+	MemorialID   string         `json:"memorialId" gorm:"column:memorial_id;type:varchar(36);index"`
+	ActivityType string         `json:"activityType" gorm:"column:activity_type;type:varchar(30);not null;comment:worship|join|create_memorial|create_story"`
 	Content      string         `json:"content" gorm:"type:json"`
 	Timestamp    time.Time      `json:"timestamp" gorm:"not null"`
-	CreatedAt    time.Time      `json:"created_at"`
+	CreatedAt    time.Time      `json:"createdAt" gorm:"column:created_at"`
 	DeletedAt    gorm.DeletedAt `json:"-" gorm:"index"`
 
 	// 关联关系

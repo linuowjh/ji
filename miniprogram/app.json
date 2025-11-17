@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/login/login",
     "pages/memorial/list/list",
     "pages/memorial/detail/detail",
     "pages/memorial/create/create",
@@ -8,7 +9,8 @@
     "pages/family/list/list",
     "pages/family/detail/detail",
     "pages/family/create/create",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/profile/worship-history/worship-history"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -2,9 +2,10 @@
 <view class="container">
   <!-- 用户信息卡片 -->
   <view class="user-card solemn-bg">
-    <image class="user-avatar" src="{{userInfo.avatar || '/images/default-avatar.png'}}" mode="aspectFill"></image>
-    <text class="user-name solemn-text">{{userInfo.nickname || '未登录'}}</text>
-    <text class="user-phone" wx:if="{{userInfo.phone}}">{{userInfo.phone}}</text>
+    <image class="user-avatar" src="{{avatarUrl}}" mode="aspectFill" binderror="onAvatarError"></image>
+    <text class="user-name solemn-text">{{userInfo ? userInfo.nickname : '未登录'}}</text>
+    <text class="user-phone" wx:if="{{userInfo && userInfo.phone}}">{{userInfo.phone}}</text>
+    <button class="btn-login" wx:if="{{!userInfo}}" bindtap="doLogin">点击登录</button>
   </view>
 
   <!-- 统计数据 -->

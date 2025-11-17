@@ -30,6 +30,7 @@ func (m *Migration) AutoMigrate() error {
 		&models.WorshipRecord{},
 		&models.Family{},
 		&models.FamilyMember{},
+		&models.FamilyActivity{},
 		&models.MediaFile{},
 		&models.Prayer{},
 		&models.Message{},
@@ -190,7 +191,7 @@ func (m *Migration) CreateIndexes() error {
 
 	successCount := 0
 	skipCount := 0
-	
+
 	for _, indexSQL := range indexes {
 		if err := m.db.Exec(indexSQL).Error; err != nil {
 			// 如果索引已存在，跳过错误

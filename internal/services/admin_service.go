@@ -58,13 +58,13 @@ type ContentModerationRequest struct {
 
 // 用户搜索请求
 type UserSearchRequest struct {
-	Keyword    string `json:"keyword"`
-	Status     int    `json:"status"`
-	Role       string `json:"role"`
-	StartDate  string `json:"start_date"`
-	EndDate    string `json:"end_date"`
-	Page       int    `json:"page"`
-	PageSize   int    `json:"page_size"`
+	Keyword   string `json:"keyword"`
+	Status    int    `json:"status"`
+	Role      string `json:"role"`
+	StartDate string `json:"start_date"`
+	EndDate   string `json:"end_date"`
+	Page      int    `json:"page"`
+	PageSize  int    `json:"page_size"`
 }
 
 // 内容搜索请求
@@ -80,13 +80,13 @@ type ContentSearchRequest struct {
 
 // 用户详细信息响应
 type UserDetailResponse struct {
-	User            models.User `json:"user"`
-	MemorialCount   int64       `json:"memorial_count"`
-	WorshipCount    int64       `json:"worship_count"`
-	FamilyCount     int64       `json:"family_count"`
-	LastLoginTime   *time.Time  `json:"last_login_time"`
-	RegistrationIP  string      `json:"registration_ip"`
-	LastLoginIP     string      `json:"last_login_ip"`
+	User           models.User `json:"user"`
+	MemorialCount  int64       `json:"memorial_count"`
+	WorshipCount   int64       `json:"worship_count"`
+	FamilyCount    int64       `json:"family_count"`
+	LastLoginTime  *time.Time  `json:"last_login_time"`
+	RegistrationIP string      `json:"registration_ip"`
+	LastLoginIP    string      `json:"last_login_ip"`
 }
 
 // 内容详情响应
@@ -149,7 +149,7 @@ func (s *AdminService) GetUserList(adminID string, req *UserSearchRequest) ([]mo
 
 	// 关键词搜索
 	if req.Keyword != "" {
-		query = query.Where("nickname LIKE ? OR email LIKE ? OR phone LIKE ?", 
+		query = query.Where("nickname LIKE ? OR email LIKE ? OR phone LIKE ?",
 			"%"+req.Keyword+"%", "%"+req.Keyword+"%", "%"+req.Keyword+"%")
 	}
 
@@ -215,13 +215,13 @@ func (s *AdminService) GetUserDetail(adminID, userID string) (*UserDetailRespons
 	// 构建响应
 	lastLogin := user.CreatedAt
 	response := &UserDetailResponse{
-		User:            user,
-		MemorialCount:   memorialCount,
-		WorshipCount:    worshipCount,
-		FamilyCount:     familyCount,
-		LastLoginTime:   &lastLogin, // TODO: User模型需要添加LastLoginAt字段
-		RegistrationIP:  "", // 如果有IP记录的话
-		LastLoginIP:     "", // 如果有IP记录的话
+		User:           user,
+		MemorialCount:  memorialCount,
+		WorshipCount:   worshipCount,
+		FamilyCount:    familyCount,
+		LastLoginTime:  &lastLogin, // TODO: User模型需要添加LastLoginAt字段
+		RegistrationIP: "",         // 如果有IP记录的话
+		LastLoginIP:    "",         // 如果有IP记录的话
 	}
 
 	return response, nil
@@ -380,11 +380,26 @@ func (s *AdminService) getPendingMemorials(page, pageSize int) ([]ContentDetailR
 		return nil, 0, err
 	}
 
+	// 批量获取创建者信息，避免N+1查询
+	creatorIDs := make([]string, 0, len(memorials))
+	for _, memorial := range memorials {
+		creatorIDs = append(creatorIDs, memorial.CreatorID)
+	}
+
+	var creators []models.User
+	if len(creatorIDs) > 0 {
+		s.db.Where("id IN ?", creatorIDs).Find(&creators)
+	}
+
+	// 创建创建者ID到用户的映射
+	creatorMap := make(map[string]models.User)
+	for _, creator := range creators {
+		creatorMap[creator.ID] = creator
+	}
+
 	var contents []ContentDetailResponse
 	for _, memorial := range memorials {
-		var creator models.User
-		s.db.Where("id = ?", memorial.CreatorID).First(&creator)
-
+		creator := creatorMap[memorial.CreatorID]
 		contents = append(contents, ContentDetailResponse{
 			ContentType: "memorial",
 			Content:     memorial,
@@ -417,11 +432,26 @@ func (s *AdminService) getPendingMessages(page, pageSize int) ([]ContentDetailRe
 		return nil, 0, err
 	}
 
+	// 批量获取用户信息，避免N+1查询
+	userIDs := make([]string, 0, len(messages))
+	for _, message := range messages {
+		userIDs = append(userIDs, message.UserID)
+	}
+
+	var users []models.User
+	if len(userIDs) > 0 {
+		s.db.Where("id IN ?", userIDs).Find(&users)
+	}
+
+	// 创建用户ID到用户的映射
+	userMap := make(map[string]models.User)
+	for _, user := range users {
+		userMap[user.ID] = user
+	}
+
 	var contents []ContentDetailResponse
 	for _, message := range messages {
-		var creator models.User
-		s.db.Where("id = ?", message.UserID).First(&creator)
-
+		creator := userMap[message.UserID]
 		contents = append(contents, ContentDetailResponse{
 			ContentType: "message",
 			Content:     message,
@@ -454,11 +484,26 @@ func (s *AdminService) getPendingPrayers(page, pageSize int) ([]ContentDetailRes
 		return nil, 0, err
 	}
 
+	// 批量获取用户信息，避免N+1查询
+	userIDs := make([]string, 0, len(prayers))
+	for _, prayer := range prayers {
+		userIDs = append(userIDs, prayer.UserID)
+	}
+
+	var users []models.User
+	if len(userIDs) > 0 {
+		s.db.Where("id IN ?", userIDs).Find(&users)
+	}
+
+	// 创建用户ID到用户的映射
+	userMap := make(map[string]models.User)
+	for _, user := range users {
+		userMap[user.ID] = user
+	}
+
 	var contents []ContentDetailResponse
 	for _, prayer := range prayers {
-		var creator models.User
-		s.db.Where("id = ?", prayer.UserID).First(&creator)
-
+		creator := userMap[prayer.UserID]
 		contents = append(contents, ContentDetailResponse{
 			ContentType: "prayer",
 			Content:     prayer,
@@ -662,7 +707,7 @@ func (s *AdminService) batchModerateWorshipRecords(recordIDs []string, status in
 // 记录管理员操作日志
 func (s *AdminService) logAdminAction(adminID, actionType string, details interface{}) {
 	// 这里可以实现管理员操作日志记录
-	fmt.Printf("Admin Action: AdminID=%s, Type=%s, Details=%+v, Time=%s\n", 
+	fmt.Printf("Admin Action: AdminID=%s, Type=%s, Details=%+v, Time=%s\n",
 		adminID, actionType, details, time.Now().Format("2006-01-02 15:04:05"))
 }
 

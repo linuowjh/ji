@@ -171,6 +171,28 @@ func (s *MemorialService) GetMemorial(userID, memorialID string) (*models.Memori
 	return &memorial, nil
 }
 
+// GetMemorialStatistics 获取纪念馆统计信息
+func (s *MemorialService) GetMemorialStatistics(memorialID string) (map[string]int64, error) {
+	stats := make(map[string]int64)
+
+	// 统计祭扫次数
+	var worshipCount int64
+	s.db.Model(&models.WorshipRecord{}).Where("memorial_id = ?", memorialID).Count(&worshipCount)
+	stats["worship_count"] = worshipCount
+
+	// 统计访客人数
+	var visitorCount int64
+	s.db.Model(&models.VisitorRecord{}).Where("memorial_id = ?", memorialID).Distinct("visitor_id").Count(&visitorCount)
+	stats["visitor_count"] = visitorCount
+
+	// 统计祈福留言数
+	var prayerCount int64
+	s.db.Model(&models.WorshipRecord{}).Where("memorial_id = ? AND worship_type = ?", memorialID, "prayer").Count(&prayerCount)
+	stats["prayer_count"] = prayerCount
+
+	return stats, nil
+}
+
 // UpdateMemorial 更新纪念馆信息
 func (s *MemorialService) UpdateMemorial(userID, memorialID string, req *UpdateMemorialRequest) error {
 	// 检查修改权限
@@ -256,21 +278,60 @@ func (s *MemorialService) GetMemorialList(userID string, page, pageSize int) ([]
 		return nil, 0, err
 	}
 
+	if len(memorials) == 0 {
+		return []MemorialListResponse{}, total, nil
+	}
+
+	// 批量获取创建者信息，避免N+1查询
+	creatorIDs := make([]string, 0, len(memorials))
+	memorialIDs := make([]string, 0, len(memorials))
+	for _, memorial := range memorials {
+		creatorIDs = append(creatorIDs, memorial.CreatorID)
+		memorialIDs = append(memorialIDs, memorial.ID)
+	}
+
+	var creators []models.User
+	s.db.Where("id IN ?", creatorIDs).Find(&creators)
+
+	creatorMap := make(map[string]models.User)
+	for _, creator := range creators {
+		creatorMap[creator.ID] = creator
+	}
+
+	// 批量获取访客数量
+	type CountResult struct {
+		MemorialID string
+		Count      int64
+	}
+	var visitorCounts []CountResult
+	s.db.Model(&models.VisitorRecord{}).
+		Select("memorial_id, COUNT(*) as count").
+		Where("memorial_id IN ?", memorialIDs).
+		Group("memorial_id").
+		Scan(&visitorCounts)
+
+	visitorCountMap := make(map[string]int64)
+	for _, vc := range visitorCounts {
+		visitorCountMap[vc.MemorialID] = vc.Count
+	}
+
+	// 批量获取祭扫次数
+	var worshipCounts []CountResult
+	s.db.Model(&models.WorshipRecord{}).
+		Select("memorial_id, COUNT(*) as count").
+		Where("memorial_id IN ?", memorialIDs).
+		Group("memorial_id").
+		Scan(&worshipCounts)
+
+	worshipCountMap := make(map[string]int64)
+	for _, wc := range worshipCounts {
+		worshipCountMap[wc.MemorialID] = wc.Count
+	}
+
 	// 转换为响应格式
 	var response []MemorialListResponse
 	for _, memorial := range memorials {
-		// 获取创建者信息
-		var creator models.User
-		s.db.Where("id = ?", memorial.CreatorID).First(&creator)
-
-		// 获取访客数量
-		var visitorCount int64
-		s.db.Model(&models.VisitorRecord{}).Where("memorial_id = ?", memorial.ID).Count(&visitorCount)
-
-		// 获取祭扫次数
-		var worshipCount int64
-		s.db.Model(&models.WorshipRecord{}).Where("memorial_id = ?", memorial.ID).Count(&worshipCount)
-
+		creator := creatorMap[memorial.CreatorID]
 		response = append(response, MemorialListResponse{
 			ID:           memorial.ID,
 			DeceasedName: memorial.DeceasedName,
@@ -281,8 +342,8 @@ func (s *MemorialService) GetMemorialList(userID string, page, pageSize int) ([]
 			PrivacyLevel: memorial.PrivacyLevel,
 			CreatedAt:    memorial.CreatedAt,
 			CreatorName:  creator.Nickname,
-			VisitorCount: visitorCount,
-			WorshipCount: worshipCount,
+			VisitorCount: visitorCountMap[memorial.ID],
+			WorshipCount: worshipCountMap[memorial.ID],
 		})
 	}
 

@@ -412,27 +412,27 @@ func (s *UserService) GetUserStatistics(userID string) (map[string]interface{}, 
 	// 统计创建的纪念馆数量
 	var memorialCount int64
 	s.db.Model(&models.Memorial{}).Where("creator_id = ? AND status = ?", userID, 1).Count(&memorialCount)
-	stats["memorial_count"] = memorialCount
+	stats["memorialCount"] = memorialCount
 
 	// 统计祭扫次数
 	var worshipCount int64
 	s.db.Model(&models.WorshipRecord{}).Where("user_id = ?", userID).Count(&worshipCount)
-	stats["worship_count"] = worshipCount
+	stats["worshipCount"] = worshipCount
 
 	// 统计参与的家族圈数量
 	var familyCount int64
 	s.db.Model(&models.FamilyMember{}).Where("user_id = ?", userID).Count(&familyCount)
-	stats["family_count"] = familyCount
+	stats["familyCount"] = familyCount
 
 	// 统计发布的祈福数量
 	var prayerCount int64
 	s.db.Model(&models.Prayer{}).Where("user_id = ?", userID).Count(&prayerCount)
-	stats["prayer_count"] = prayerCount
+	stats["prayerCount"] = prayerCount
 
 	// 统计发布的留言数量
 	var messageCount int64
 	s.db.Model(&models.Message{}).Where("user_id = ?", userID).Count(&messageCount)
-	stats["message_count"] = messageCount
+	stats["messageCount"] = messageCount
 
 	// 统计最近7天的活动
 	sevenDaysAgo := time.Now().AddDate(0, 0, -7)
@@ -440,7 +440,7 @@ func (s *UserService) GetUserStatistics(userID string) (map[string]interface{}, 
 	s.db.Model(&models.WorshipRecord{}).
 		Where("user_id = ? AND created_at >= ?", userID, sevenDaysAgo).
 		Count(&recentWorshipCount)
-	stats["recent_worship_count"] = recentWorshipCount
+	stats["recentWorshipCount"] = recentWorshipCount
 
 	// 获取用户创建的纪念馆的总访客数
 	var totalVisitors int64
@@ -448,7 +448,7 @@ func (s *UserService) GetUserStatistics(userID string) (map[string]interface{}, 
 		Joins("JOIN memorials m ON vr.memorial_id = m.id").
 		Where("m.creator_id = ? AND m.status = ?", userID, 1).
 		Count(&totalVisitors)
-	stats["total_visitors"] = totalVisitors
+	stats["totalVisitors"] = totalVisitors
 
 	return stats, nil
 }
@@ -610,4 +610,31 @@ func (s *UserService) GetUpcomingReminders(userID string) ([]*UpcomingReminderRe
 	}
 
 	return responses, nil
+}
+
+// UpdatePhoneRequest 更新手机号请求
+type UpdatePhoneRequest struct {
+	Code string `json:"code" binding:"required"`
+}
+
+// UpdatePhone 更新用户手机号
+func (s *UserService) UpdatePhone(userID string, code string) (string, error) {
+	// 这里应该调用微信API解密手机号
+	// 由于是开发环境，我们暂时模拟返回
+	// 生产环境需要调用: https://api.weixin.qq.com/wxa/business/getuserphonenumber
+
+	// TODO: 实际生产环境需要调用微信API
+	// url := fmt.Sprintf("https://api.weixin.qq.com/wxa/business/getuserphonenumber?access_token=%s", accessToken)
+	// 发送POST请求，body: {"code": code}
+
+	// 开发环境模拟
+	phone := "138****8888" // 模拟的手机号
+
+	// 更新数据库
+	err := s.db.Model(&models.User{}).Where("id = ?", userID).Update("phone", phone).Error
+	if err != nil {
+		return "", fmt.Errorf("更新手机号失败: %v", err)
+	}
+
+	return phone, nil
 }

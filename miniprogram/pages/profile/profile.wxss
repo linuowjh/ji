@@ -105,3 +105,29 @@
   padding: 24rpx;
   font-size: 32rpx;
 }
+
+.btn-login {
+  margin-top: 30rpx;
+  width: 400rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border-radius: 40rpx;
+  font-size: 32rpx;
+  border: none;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.solemn-bg {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+}
+
+.solemn-text {
+  color: #ecf0f1;
+}
