@@ -59,9 +59,10 @@
       <!-- 主题风格 -->
       <view class="form-item">
         <text class="form-label">主题风格</text>
-        <picker mode="selector" range="{{themeOptions}}" range-key="label" value="{{formData.themeStyle}}" bindchange="selectTheme">
+        <picker mode="selector" range="{{themeOptions}}" range-key="label" value="{{themeIndex}}" bindchange="selectTheme">
           <view class="form-picker">
-            <text>{{themeOptions[formData.themeStyle] ? themeOptions[formData.themeStyle].label : '请选择主题风格'}}</text>
+            <text wx:if="{{themeLabel}}">{{themeLabel}}</text>
+            <text wx:else class="picker-placeholder">请选择主题风格</text>
           </view>
         </picker>
       </view>
@@ -69,9 +70,10 @@
       <!-- 墓碑样式 -->
       <view class="form-item">
         <text class="form-label">墓碑样式</text>
-        <picker mode="selector" range="{{tombstoneOptions}}" range-key="label" value="{{formData.tombstoneStyle}}" bindchange="selectTombstone">
+        <picker mode="selector" range="{{tombstoneOptions}}" range-key="label" value="{{tombstoneIndex}}" bindchange="selectTombstone">
           <view class="form-picker">
-            <text>{{tombstoneOptions[formData.tombstoneStyle] ? tombstoneOptions[formData.tombstoneStyle].label : '请选择墓碑样式'}}</text>
+            <text wx:if="{{tombstoneLabel}}">{{tombstoneLabel}}</text>
+            <text wx:else class="picker-placeholder">请选择墓碑样式</text>
           </view>
         </picker>
       </view>
@@ -89,9 +91,10 @@
       
       <view class="form-item">
         <text class="form-label">访问权限</text>
-        <picker mode="selector" range="{{privacyOptions}}" range-key="label" value="{{formData.privacyLevel}}" bindchange="selectPrivacy">
+        <picker mode="selector" range="{{privacyOptions}}" range-key="label" value="{{formData.privacyLevel - 1}}" bindchange="selectPrivacy">
           <view class="form-picker">
-            <text>{{privacyOptions[formData.privacyLevel - 1].label}}</text>
+            <text wx:if="{{formData.privacyLevel && privacyOptions[formData.privacyLevel - 1]}}">{{privacyOptions[formData.privacyLevel - 1].label}}</text>
+            <text wx:else class="picker-placeholder">请选择访问权限</text>
           </view>
         </picker>
       </view>

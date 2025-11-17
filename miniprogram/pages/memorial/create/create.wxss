@@ -28,6 +28,13 @@
   border-radius: 8rpx;
   font-size: 30rpx;
   box-sizing: border-box;
+  /* 确保占位符文本完整显示 */
+  min-height: 88rpx;
+  line-height: 1.4;
+  /* 移除文本截断样式，确保占位符完整显示 */
+  white-space: normal;
+  overflow: visible;
+  word-wrap: break-word;
 }
 
 .form-textarea {

@@ -29,7 +29,11 @@ Page({
     privacyOptions: [
       { value: 1, label: '家族可见' },
       { value: 2, label: '私密' }
-    ]
+    ],
+    themeIndex: 0,
+    tombstoneIndex: 0,
+    themeLabel: '',
+    tombstoneLabel: ''
   },
 
   onLoad(options) {
@@ -55,8 +59,29 @@ Page({
       success: res => {
         wx.hideLoading()
         if (res.data.code === 0) {
+          // 只更新formData中的字段，保留选项数组
+          const memorialData = res.data.data
+          
+          // 计算主题和墓碑样式的索引和标签
+          const themeIndex = this.getThemeIndex(memorialData.themeStyle || 'traditional')
+          const tombstoneIndex = this.getTombstoneIndex(memorialData.tombstoneStyle || 'marble')
+          const themeLabel = this.getThemeLabel(memorialData.themeStyle || 'traditional')
+          const tombstoneLabel = this.getTombstoneLabel(memorialData.tombstoneStyle || 'marble')
+          
           this.setData({
-            formData: res.data.data
+            'formData.deceasedName': memorialData.deceasedName || '',
+            'formData.birthDate': memorialData.birthDate || '',
+            'formData.deathDate': memorialData.deathDate || '',
+            'formData.biography': memorialData.biography || '',
+            'formData.avatarUrl': memorialData.avatarUrl || '',
+            'formData.themeStyle': memorialData.themeStyle || 'traditional',
+            'formData.tombstoneStyle': memorialData.tombstoneStyle || 'marble',
+            'formData.epitaph': memorialData.epitaph || '',
+            'formData.privacyLevel': memorialData.privacyLevel || 1,
+            'themeIndex': themeIndex,
+            'tombstoneIndex': tombstoneIndex,
+            'themeLabel': themeLabel,
+            'tombstoneLabel': tombstoneLabel
           })
           wx.setNavigationBarTitle({
             title: '编辑纪念馆'
@@ -110,23 +135,77 @@ Page({
 
   // 选择主题风格
   selectTheme(e) {
+    const selectedIndex = parseInt(e.detail.value)
+    const selectedOption = this.data.themeOptions[selectedIndex]
     this.setData({
-      'formData.themeStyle': e.detail.value
+      'formData.themeStyle': selectedOption.value,
+      'themeIndex': selectedIndex,
+      'themeLabel': selectedOption.label
     })
   },
 
   // 选择墓碑样式
   selectTombstone(e) {
+    const selectedIndex = parseInt(e.detail.value)
+    const selectedOption = this.data.tombstoneOptions[selectedIndex]
     this.setData({
-      'formData.tombstoneStyle': e.detail.value
+      'formData.tombstoneStyle': selectedOption.value,
+      'tombstoneIndex': selectedIndex,
+      'tombstoneLabel': selectedOption.label
     })
   },
 
   // 选择隐私级别
   selectPrivacy(e) {
+    const selectedIndex = parseInt(e.detail.value)
+    const selectedOption = this.data.privacyOptions[selectedIndex]
     this.setData({
-      'formData.privacyLevel': parseInt(e.detail.value)
+      'formData.privacyLevel': selectedOption.value
     })
+  },
+
+  // 根据主题值获取索引
+  getThemeIndex(themeValue) {
+    const themeOptions = this.data.themeOptions
+    for (let i = 0; i < themeOptions.length; i++) {
+      if (themeOptions[i].value === themeValue) {
+        return i
+      }
+    }
+    return 0
+  },
+
+  // 根据主题值获取标签
+  getThemeLabel(themeValue) {
+    const themeOptions = this.data.themeOptions
+    for (let i = 0; i < themeOptions.length; i++) {
+      if (themeOptions[i].value === themeValue) {
+        return themeOptions[i].label
+      }
+    }
+    return ''
+  },
+
+  // 根据墓碑样式值获取索引
+  getTombstoneIndex(tombstoneValue) {
+    const tombstoneOptions = this.data.tombstoneOptions
+    for (let i = 0; i < tombstoneOptions.length; i++) {
+      if (tombstoneOptions[i].value === tombstoneValue) {
+        return i
+      }
+    }
+    return 0
+  },
+
+  // 根据墓碑样式值获取标签
+  getTombstoneLabel(tombstoneValue) {
+    const tombstoneOptions = this.data.tombstoneOptions
+    for (let i = 0; i < tombstoneOptions.length; i++) {
+      if (tombstoneOptions[i].value === tombstoneValue) {
+        return tombstoneOptions[i].label
+      }
+    }
+    return ''
   },
 
   // 上传照片
