@@ -42,7 +42,7 @@ Page({
       },
       success: res => {
         if (res.data.code === 0) {
-          const newMemorials = res.data.data || []
+          const newMemorials = res.data.data.list || []
           this.setData({
             memorials: [...this.data.memorials, ...newMemorials],
             loading: false,

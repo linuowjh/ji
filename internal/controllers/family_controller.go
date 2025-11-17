@@ -311,7 +311,7 @@ func (c *FamilyController) JoinFamilyByCode(ctx *gin.Context) {
 	}
 
 	var req struct {
-		InviteCode string `json:"invite_code" binding:"required"`
+		InviteCode string `json:"inviteCode" binding:"required"` // 驼峰命名
 	}
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, APIResponse{

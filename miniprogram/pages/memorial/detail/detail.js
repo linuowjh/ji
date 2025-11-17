@@ -54,13 +54,12 @@ Page({
   // 加载最近祭扫记录
   loadRecentWorship() {
     wx.request({
-      url: `${app.globalData.apiBase}/api/v1/worship/records`,
+      url: `${app.globalData.apiBase}/api/v1/worship/memorials/${this.data.memorialId}/records`,
       method: 'GET',
       header: {
         'Authorization': `Bearer ${app.globalData.token}`
       },
       data: {
-        memorialId: this.data.memorialId,
         page: 1,
         pageSize: 5
       },

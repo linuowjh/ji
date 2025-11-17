@@ -132,6 +132,7 @@ func Setup(db *gorm.DB, rdb *redis.Client, cfg *config.Config) *gin.Engine {
 			// 媒体文件相关路由
 			media := protected.Group("/media")
 			{
+				media.POST("/upload", mediaController.Upload) // 通用上传接口
 				media.POST("/upload/image", mediaController.UploadImage)
 				media.POST("/upload/video", mediaController.UploadVideo)
 				media.POST("/upload/audio", mediaController.UploadAudio)

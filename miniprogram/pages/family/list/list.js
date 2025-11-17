@@ -28,7 +28,7 @@ Page({
       success: res => {
         if (res.data.code === 0) {
           this.setData({
-            families: res.data.data || [],
+            families: res.data.data.list || [],
             loading: false
           })
         } else {
@@ -75,7 +75,7 @@ Page({
     wx.showLoading({ title: '加入中...' })
 
     wx.request({
-      url: `${app.globalData.apiBase}/api/v1/families/join`,
+      url: `${app.globalData.apiBase}/api/v1/families/join-by-code`,
       method: 'POST',
       header: {
         'Authorization': `Bearer ${app.globalData.token}`,

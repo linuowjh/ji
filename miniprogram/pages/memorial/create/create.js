@@ -157,8 +157,13 @@ Page({
         wx.hideLoading()
         const data = JSON.parse(res.data)
         if (data.code === 0) {
+          // 将相对路径转换为完整 URL
+          let avatarUrl = data.data.url
+          if (avatarUrl && !avatarUrl.startsWith('http')) {
+            avatarUrl = `${app.globalData.apiBase}${avatarUrl}`
+          }
           this.setData({
-            'formData.avatarUrl': data.data.url
+            'formData.avatarUrl': avatarUrl
           })
           wx.showToast({
             title: '上传成功',

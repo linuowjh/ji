@@ -1,7 +1,9 @@
 package services
 
 import (
+	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 	"yun-nian-memorial/internal/models"
 	"yun-nian-memorial/internal/utils"
@@ -9,47 +11,94 @@ import (
 	"gorm.io/gorm"
 )
 
+// FlexibleDate 支持多种日期格式的自定义类型
+type FlexibleDate struct {
+	time.Time
+}
+
+// UnmarshalJSON 自定义 JSON 解析，支持多种日期格式
+func (fd *FlexibleDate) UnmarshalJSON(b []byte) error {
+	s := strings.Trim(string(b), "\"")
+	if s == "null" || s == "" {
+		return nil
+	}
+
+	// 尝试多种日期格式
+	formats := []string{
+		"2006-01-02",                // YYYY-MM-DD
+		"2006-01-02T15:04:05Z07:00", // RFC3339
+		"2006-01-02T15:04:05Z",      // RFC3339 without timezone
+		"2006-01-02 15:04:05",       // YYYY-MM-DD HH:MM:SS
+	}
+
+	var err error
+	for _, format := range formats {
+		fd.Time, err = time.Parse(format, s)
+		if err == nil {
+			return nil
+		}
+	}
+
+	return fmt.Errorf("无法解析日期格式: %s", s)
+}
+
+// MarshalJSON 自定义 JSON 序列化
+func (fd FlexibleDate) MarshalJSON() ([]byte, error) {
+	if fd.Time.IsZero() {
+		return []byte("null"), nil
+	}
+	return json.Marshal(fd.Time.Format("2006-01-02"))
+}
+
+// convertFlexibleDateToTimePtr 将 FlexibleDate 转换为 *time.Time
+func convertFlexibleDateToTimePtr(fd *FlexibleDate) *time.Time {
+	if fd == nil || fd.Time.IsZero() {
+		return nil
+	}
+	return &fd.Time
+}
+
 type MemorialService struct {
 	db                *gorm.DB
 	permissionManager *utils.PermissionManager
 }
 
 type CreateMemorialRequest struct {
-	DeceasedName   string     `json:"deceased_name" binding:"required"`
-	BirthDate      *time.Time `json:"birth_date"`
-	DeathDate      *time.Time `json:"death_date"`
-	Biography      string     `json:"biography"`
-	AvatarURL      string     `json:"avatar_url"`
-	ThemeStyle     string     `json:"theme_style"`
-	TombstoneStyle string     `json:"tombstone_style"`
-	Epitaph        string     `json:"epitaph"`
-	PrivacyLevel   int        `json:"privacy_level"`
+	DeceasedName   string        `json:"deceasedName" binding:"required"` // 支持驼峰命名
+	BirthDate      *FlexibleDate `json:"birthDate"`                       // 支持多种日期格式
+	DeathDate      *FlexibleDate `json:"deathDate"`                       // 支持多种日期格式
+	Biography      string        `json:"biography"`
+	AvatarURL      string        `json:"avatarUrl"`
+	ThemeStyle     string        `json:"themeStyle"`
+	TombstoneStyle string        `json:"tombstoneStyle"`
+	Epitaph        string        `json:"epitaph"`
+	PrivacyLevel   int           `json:"privacyLevel"`
 }
 
 type UpdateMemorialRequest struct {
-	DeceasedName   string     `json:"deceased_name"`
-	BirthDate      *time.Time `json:"birth_date"`
-	DeathDate      *time.Time `json:"death_date"`
-	Biography      string     `json:"biography"`
-	AvatarURL      string     `json:"avatar_url"`
-	ThemeStyle     string     `json:"theme_style"`
-	TombstoneStyle string     `json:"tombstone_style"`
-	Epitaph        string     `json:"epitaph"`
-	PrivacyLevel   int        `json:"privacy_level"`
+	DeceasedName   string        `json:"deceasedName"` // 支持驼峰命名
+	BirthDate      *FlexibleDate `json:"birthDate"`    // 支持多种日期格式
+	DeathDate      *FlexibleDate `json:"deathDate"`    // 支持多种日期格式
+	Biography      string        `json:"biography"`
+	AvatarURL      string        `json:"avatarUrl"`
+	ThemeStyle     string        `json:"themeStyle"`
+	TombstoneStyle string        `json:"tombstoneStyle"`
+	Epitaph        string        `json:"epitaph"`
+	PrivacyLevel   int           `json:"privacyLevel"`
 }
 
 type MemorialListResponse struct {
 	ID           string     `json:"id"`
-	DeceasedName string     `json:"deceased_name"`
-	BirthDate    *time.Time `json:"birth_date"`
-	DeathDate    *time.Time `json:"death_date"`
-	AvatarURL    string     `json:"avatar_url"`
-	ThemeStyle   string     `json:"theme_style"`
-	PrivacyLevel int        `json:"privacy_level"`
-	CreatedAt    time.Time  `json:"created_at"`
-	CreatorName  string     `json:"creator_name"`
-	VisitorCount int64      `json:"visitor_count"`
-	WorshipCount int64      `json:"worship_count"`
+	DeceasedName string     `json:"deceasedName"` // 驼峰命名
+	BirthDate    *time.Time `json:"birthDate"`    // 驼峰命名
+	DeathDate    *time.Time `json:"deathDate"`    // 驼峰命名
+	AvatarURL    string     `json:"avatarUrl"`    // 驼峰命名
+	ThemeStyle   string     `json:"themeStyle"`   // 驼峰命名
+	PrivacyLevel int        `json:"privacyLevel"` // 驼峰命名
+	CreatedAt    time.Time  `json:"createdAt"`    // 驼峰命名
+	CreatorName  string     `json:"creatorName"`  // 驼峰命名
+	VisitorCount int64      `json:"visitorCount"` // 驼峰命名
+	WorshipCount int64      `json:"worshipCount"` // 驼峰命名
 }
 
 func NewMemorialService(db *gorm.DB) *MemorialService {
@@ -71,8 +120,8 @@ func (s *MemorialService) CreateMemorial(userID string, req *CreateMemorialReque
 		ID:             utils.GenerateUUID(),
 		CreatorID:      userID,
 		DeceasedName:   req.DeceasedName,
-		BirthDate:      req.BirthDate,
-		DeathDate:      req.DeathDate,
+		BirthDate:      convertFlexibleDateToTimePtr(req.BirthDate),
+		DeathDate:      convertFlexibleDateToTimePtr(req.DeathDate),
 		Biography:      req.Biography,
 		AvatarURL:      req.AvatarURL,
 		ThemeStyle:     s.getDefaultThemeStyle(req.ThemeStyle),
@@ -87,7 +136,7 @@ func (s *MemorialService) CreateMemorial(userID string, req *CreateMemorialReque
 	}
 
 	// 预加载创建者信息
-	if err := s.db.Preload("Creator").First(memorial, memorial.ID).Error; err != nil {
+	if err := s.db.Preload("Creator").Where("id = ?", memorial.ID).First(memorial).Error; err != nil {
 		return nil, fmt.Errorf("获取纪念馆信息失败: %v", err)
 	}
 
@@ -144,10 +193,10 @@ func (s *MemorialService) UpdateMemorial(userID, memorialID string, req *UpdateM
 		updates["deceased_name"] = req.DeceasedName
 	}
 	if req.BirthDate != nil {
-		updates["birth_date"] = req.BirthDate
+		updates["birth_date"] = convertFlexibleDateToTimePtr(req.BirthDate)
 	}
 	if req.DeathDate != nil {
-		updates["death_date"] = req.DeathDate
+		updates["death_date"] = convertFlexibleDateToTimePtr(req.DeathDate)
 	}
 	if req.Biography != "" {
 		updates["biography"] = req.Biography
@@ -278,7 +327,7 @@ func (s *MemorialService) validateCreateRequest(req *CreateMemorialRequest) erro
 
 	// 验证日期逻辑
 	if req.BirthDate != nil && req.DeathDate != nil {
-		if req.BirthDate.After(*req.DeathDate) {
+		if req.BirthDate.Time.After(req.DeathDate.Time) {
 			return fmt.Errorf("出生日期不能晚于逝世日期")
 		}
 	}
@@ -306,7 +355,7 @@ func (s *MemorialService) validateUpdateRequest(req *UpdateMemorialRequest) erro
 
 	// 验证日期逻辑
 	if req.BirthDate != nil && req.DeathDate != nil {
-		if req.BirthDate.After(*req.DeathDate) {
+		if req.BirthDate.Time.After(req.DeathDate.Time) {
 			return fmt.Errorf("出生日期不能晚于逝世日期")
 		}
 	}

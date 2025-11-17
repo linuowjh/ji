@@ -1,0 +1,24 @@
+<!--pages/family/create/create.wxml-->
+<view class="container">
+  <form bindsubmit="submitForm">
+    <!-- 基础信息 -->
+    <view class="section card">
+      <view class="section-title">家族信息</view>
+      
+      <!-- 家族名称 -->
+      <view class="form-item">
+        <text class="form-label">家族名称 *</text>
+        <input class="form-input" placeholder="请输入家族名称" value="{{formData.name}}" bindinput="inputName" maxlength="50" />
+      </view>
+
+      <!-- 家族描述 -->
+      <view class="form-item">
+        <text class="form-label">家族描述</text>
+        <textarea class="form-textarea" placeholder="请输入家族描述..." value="{{formData.description}}" bindinput="inputDescription" maxlength="500"></textarea>
+      </view>
+    </view>
+
+    <!-- 提交按钮 -->
+    <button class="btn-primary submit-btn" formType="submit">创建家族圈</button>
+  </form>
+</view>

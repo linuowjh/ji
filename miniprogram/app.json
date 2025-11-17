@@ -7,6 +7,7 @@
     "pages/memorial/worship/worship",
     "pages/family/list/list",
     "pages/family/detail/detail",
+    "pages/family/create/create",
     "pages/profile/profile"
   ],
   "window": {
